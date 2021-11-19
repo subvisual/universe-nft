@@ -1,40 +1,44 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./NFT.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+
+import {NFT} from "./NFT.sol";
+import {AuthorizableMints} from "./AuthorizableMints.sol";
 
 /**
  * An NFT representing the Subvisual Universe
  *
  * @notice Each person in the universe
  */
-contract SubvisualUniverse is NFT {
+contract SubvisualUniverse is NFT, AuthorizableMints {
     /// A single person fits should always fit in a 256 slot
-    struct Person {
+    struct Metadata {
         /// name of the person (must fit a bytes32)
         bytes32 name;
         /// name of the company (must fit a bytes32)
         bytes32 company;
         /// when the person first joined the universe
-        uint8 joinYear;
+        uint64 joinAt;
         /// when the person left the universe
-        uint8 leftYear;
+        uint64 leftAt;
     }
 
-    // TODO test this
-    // keccak256("EIP712Domain(Person person,uint64 expiry)")
-    bytes32 public constant MINT_TYPEHASH = 0x8cad95687ba82c2ce50e74f7b754645e5117c3a5bec8151c0726d5857980a866;
-
     // Mapping of everyone's data
-    mapping(uint256 => Person) public people;
+    mapping(uint256 => Metadata) public metadata;
 
-    /// ID of the next NFT to mint
+    /// Used authorizations
+    mapping(bytes32 => bool) private nonces;
+
     uint256 nextId;
 
     /**
      * @param _uri base URI to use for assets
      */
-    constructor(string memory _uri) NFT("Subvisual Universe NFT", "SVUNI", _uri) {}
+    constructor(string memory _uri)
+        NFT("Subvisual Universe NFT", "SVUNI", _uri)
+        AuthorizableMints("SubvisualUniverseNFT")
+    {}
 
     /**
      * Mints a new NFT
@@ -42,78 +46,48 @@ contract SubvisualUniverse is NFT {
      * @notice Only callable by an authorized operator
      *
      * @param _to Address of the recipient
-     * @param _name Name of the recipient (must be packed into a bytes32)
-     * @param _company Company the recipient works for (must be packed into a bytes32)
-     * @param _joinedAt When the person joined the company
-     * @param _leftAt When the person left the company. 0 means he's currently still there
+     * @param _person person's metadata
      */
-    function mint(address _to, Person calldata _person) external onlyRole(OPERATOR_ROLE) {
+    function mint(address _to, Metadata calldata _person) external onlyRole(OPERATOR_ROLE) {
         _mintSingle(_to, _person);
     }
 
-    function selfMint(
-        Person calldata _person,
-        uint64 _exp,
+    function mintWithApproval(
+        MintApproval calldata _approval,
+        Metadata calldata _metadata,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) external {
-        address signer = _deriveSigner(abi.encode(MINT_TYPEHASH, _person, _exp), v, r, s);
+        address signer = _recover(_approval, v, r, s);
 
-        require(hasRole(OPERATOR_ROLE, signer), "invalid signature");
-        require(block.timestamp < _exp, "signature expired");
+        require(hasRole(OPERATOR_ROLE, signer), "SVUNI: invalid signature");
+        require(_approval.name == _metadata.name, "SVUNI: metadata name does not match approval");
+        require(_approval.company == _metadata.company, "SVUNI: metadata company does not match approval");
 
-        _mintSingle(_msgSender(), _person);
+        _mintSingle(_msgSender(), _metadata);
     }
 
-    function setLeftAt(uint256 _id, uint64 _timestamp) public onlyRole(OPERATOR_ROLE) {
-        Person storage person = people[_id];
+    function mintBatch(address[] calldata _tos, Metadata[] calldata _metadatas) external {
+        require(_tos.length == _metadatas.length, "SVUNI: not same length");
 
-        delete nameToCompany[person.name];
-        person.leftAt = _timestamp;
-    }
+        for (uint8 i = 0; i < _tos.length; ++i) {
+            address to = _tos[i];
+            Metadata calldata meta = _metadatas[i];
 
-    function mintBatch(address[] calldata _tos, Person[] calldata _persons) {
-        require(_tos.length == _persons.length, "SubvisualUniverse: not same length");
-
-        for (i = 0; i < _tos.length; ++tos) {
-            address memory to = _tos[i];
-            Person memory person = _persons[i];
-
-            _mintSingle(_to, _person);
+            _mintSingle(to, meta);
         }
     }
 
-    function _mintSingle(address _to, Person memory _person) internal {
+    function _mintSingle(address _to, Metadata memory _metadata) internal {
         mint(_to, nextId);
-        people[nextId] = _person;
+        metadata[nextId] = _metadata;
         nextId++;
     }
 
-    /**
-     * @dev Auxiliary function to verify structured EIP712 message signature and derive its signer
-     *
-     * @param abiEncodedTypehash abi.encode of the message typehash together with all its parameters
-     * @param v the recovery byte of the signature
-     * @param r half of the ECDSA signature pair
-     * @param s half of the ECDSA signature pair
-     */
-    function _deriveSigner(
-        bytes memory abiEncodedTypehash,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) private view returns (address) {
-        // build the EIP-712 hashStruct of the message
-        bytes32 hashStruct = keccak256(abiEncodedTypehash);
+    function setLeftAt(uint256 _id, uint64 _timestamp) public onlyRole(OPERATOR_ROLE) {
+        Metadata storage meta = metadata[_id];
 
-        // calculate the EIP-712 digest "\x19\x01" ‖ domainSeparator ‖ hashStruct(message)
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashStruct));
-
-        // recover the address which signed the message with v, r, s
-        address signer = ECDSA.recover(digest, v, r, s);
-
-        // return the signer address derived from the signature
-        return signer;
+        meta.leftAt = _timestamp;
     }
 }
