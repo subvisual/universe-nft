@@ -1,44 +1,73 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import {IERC721, ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {IERC721Enumerable, ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import {IAccessControl, AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
-import {NFT} from "./NFT.sol";
-import {AuthorizableMints} from "./AuthorizableMints.sol";
+import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 
 /**
  * An NFT representing the Subvisual Universe
- *
- * @notice Each person in the universe
  */
-contract SubvisualUniverse is NFT, AuthorizableMints {
-    /// A single person fits should always fit in a 256 slot
-    struct Metadata {
-        /// name of the person (must fit a bytes32)
-        bytes32 name;
-        /// name of the company (must fit a bytes32)
-        bytes32 company;
-        /// when the person first joined the universe
-        uint64 joinAt;
-        /// when the person left the universe
-        uint64 leftAt;
-    }
+contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
+    //
+    // Constants
+    //
 
-    // Mapping of everyone's data
-    mapping(uint256 => Metadata) public metadata;
+    /// Role with permissions to set metadata and URIs
+    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR");
 
-    /// Used authorizations
-    mapping(bytes32 => bool) private nonces;
+    // Mint approval EIP712 TypeHash
+    bytes32 public constant MINT_TYPEHASH = keccak256("Mint(address account,uint256 tokenId)");
 
-    uint256 nextId;
+    //
+    // State
+    //
+    string public baseURI;
+
+    //
+    // Events
+    //
+
+    /// Emitted when the base URI changes
+    event BaseURIUpdated(string newBaseURI);
 
     /**
-     * @param _uri base URI to use for assets
+     * @param _name NFT name
+     * @param _symbol NFT symbol
+     * @param _baseURI base URI to use for assets
      */
-    constructor(string memory _uri)
-        NFT("Subvisual Universe NFT", "SVUNI", _uri)
-        AuthorizableMints("SubvisualUniverseNFT")
-    {}
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        string memory _baseURI
+    ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(OPERATOR_ROLE, _msgSender());
+
+        baseURI = _baseURI;
+
+        emit BaseURIUpdated(_baseURI);
+    }
+
+    //
+    // Public API
+    //
+
+    /**
+     * Updates the base URI
+     *
+     * @notice Only callable by an authorized operator
+     *
+     * @param _baseURI new base URI for the token
+     */
+    function setBaseURI(string memory _baseURI) public onlyRole(OPERATOR_ROLE) {
+        baseURI = _baseURI;
+
+        emit BaseURIUpdated(_baseURI);
+    }
 
     /**
      * Mints a new NFT
@@ -46,48 +75,70 @@ contract SubvisualUniverse is NFT, AuthorizableMints {
      * @notice Only callable by an authorized operator
      *
      * @param _to Address of the recipient
-     * @param _person person's metadata
+     * @param _tokenId token ID to mint
+     * @param _sig EIP712 signature to validate
      */
-    function mint(address _to, Metadata calldata _person) external onlyRole(OPERATOR_ROLE) {
-        _mintSingle(_to, _person);
-    }
-
-    function mintWithApproval(
-        MintApproval calldata _approval,
-        Metadata calldata _metadata,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
+    function redeem(
+        address _to,
+        uint256 _tokenId,
+        bytes calldata _sig
     ) external {
-        address signer = _recover(_approval, v, r, s);
-
-        require(hasRole(OPERATOR_ROLE, signer), "SVUNI: invalid signature");
-        require(_approval.name == _metadata.name, "SVUNI: metadata name does not match approval");
-        require(_approval.company == _metadata.company, "SVUNI: metadata company does not match approval");
-
-        _mintSingle(_msgSender(), _metadata);
+        require(_verify(_hash(_to, _tokenId), _sig));
+        _safeMint(_to, _tokenId);
     }
 
-    function mintBatch(address[] calldata _tos, Metadata[] calldata _metadatas) external {
-        require(_tos.length == _metadatas.length, "SVUNI: not same length");
-
-        for (uint8 i = 0; i < _tos.length; ++i) {
-            address to = _tos[i];
-            Metadata calldata meta = _metadatas[i];
-
-            _mintSingle(to, meta);
-        }
+    /**
+     * Mints a new NFT on behalf of an account
+     *
+     * @notice Only callable by an approved operator
+     *
+     * @param _to Address of the recipient
+     * @param _tokenId token ID to mint
+     */
+    function redeemFor(address _to, uint256 _tokenId) external onlyRole(OPERATOR_ROLE) {
+        _safeMint(_to, _tokenId);
     }
 
-    function _mintSingle(address _to, Metadata memory _metadata) internal {
-        mint(_to, nextId);
-        metadata[nextId] = _metadata;
-        nextId++;
+    //
+    // ERC165
+    //
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721Enumerable, AccessControl)
+        returns (bool)
+    {
+        return
+            interfaceId == type(IERC721).interfaceId ||
+            interfaceId == type(IERC721Enumerable).interfaceId ||
+            interfaceId == type(IERC721Metadata).interfaceId ||
+            interfaceId == type(IAccessControl).interfaceId;
     }
 
-    function setLeftAt(uint256 _id, uint64 _timestamp) public onlyRole(OPERATOR_ROLE) {
-        Metadata storage meta = metadata[_id];
+    //
+    // Internal API
+    //
 
-        meta.leftAt = _timestamp;
+    /**
+     * Computes the EIP712 Hash of a mint authorization
+     *
+     * @param _account Account who will mint the NFT
+     * @param _tokenId ID of token to mint
+     * @return The resulting EIP712 Hash
+     */
+    function _hash(address _account, uint256 _tokenId) internal view returns (bytes32) {
+        return _hashTypedDataV4(keccak256(abi.encode(MINT_TYPEHASH, _account, _tokenId)));
+    }
+
+    /**
+     * Verifies a mint approval
+     *
+     * @param _digest The EIP712 hash digest
+     * @param _sig The signature to check
+     * @return true if the signature matches the hash, and corresponds to a valid minter role
+     */
+    function _verify(bytes32 _digest, bytes memory _sig) internal view returns (bool) {
+        return hasRole(OPERATOR_ROLE, ECDSA.recover(_digest, _sig));
     }
 }

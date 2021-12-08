@@ -2,6 +2,7 @@ import { task } from "hardhat/config";
 
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
+import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-waffle";
 import "hardhat-gas-reporter";
 
