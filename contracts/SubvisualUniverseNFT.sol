@@ -25,7 +25,7 @@ contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
     //
     // State
     //
-    string public baseURI;
+    string baseURI;
 
     //
     // Events
@@ -37,19 +37,19 @@ contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
     /**
      * @param _name NFT name
      * @param _symbol NFT symbol
-     * @param _baseURI base URI to use for assets
+     * @param _newBaseURI base URI to use for assets
      */
     constructor(
         string memory _name,
         string memory _symbol,
-        string memory _baseURI
+        string memory _newBaseURI
     ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(OPERATOR_ROLE, _msgSender());
 
-        baseURI = _baseURI;
+        baseURI = _newBaseURI;
 
-        emit BaseURIUpdated(_baseURI);
+        emit BaseURIUpdated(_newBaseURI);
     }
 
     //
@@ -61,30 +61,23 @@ contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
      *
      * @notice Only callable by an authorized operator
      *
-     * @param _baseURI new base URI for the token
+     * @param _newBaseURI new base URI for the token
      */
-    function setBaseURI(string memory _baseURI) public onlyRole(OPERATOR_ROLE) {
-        baseURI = _baseURI;
+    function setBaseURI(string memory _newBaseURI) public onlyRole(OPERATOR_ROLE) {
+        baseURI = _newBaseURI;
 
-        emit BaseURIUpdated(_baseURI);
+        emit BaseURIUpdated(_newBaseURI);
     }
 
     /**
      * Mints a new NFT
      *
-     * @notice Only callable by an authorized operator
-     *
-     * @param _to Address of the recipient
      * @param _tokenId token ID to mint
      * @param _sig EIP712 signature to validate
      */
-    function redeem(
-        address _to,
-        uint256 _tokenId,
-        bytes calldata _sig
-    ) external {
-        require(_verify(_hash(_to, _tokenId), _sig));
-        _safeMint(_to, _tokenId);
+    function redeem(uint256 _tokenId, bytes calldata _sig) external {
+        require(_verify(_hash(_msgSender(), _tokenId), _sig));
+        _safeMint(_msgSender(), _tokenId);
     }
 
     /**
@@ -100,8 +93,16 @@ contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
     }
 
     //
+    // ERC721
+    //
+    function _baseURI() internal view override(ERC721) returns (string memory) {
+        return baseURI;
+    }
+
+    //
     // ERC165
     //
+
     function supportsInterface(bytes4 interfaceId)
         public
         view
