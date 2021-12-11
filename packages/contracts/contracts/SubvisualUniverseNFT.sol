@@ -11,7 +11,7 @@ import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.so
 /**
  * An NFT representing the Subvisual Universe
  */
-contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
+contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     //
     // Constants
     //
@@ -23,9 +23,15 @@ contract SubvisualUniverse is ERC721Enumerable, AccessControl, EIP712 {
     bytes32 public constant MINT_TYPEHASH = keccak256("Mint(address account,uint256 tokenId)");
 
     //
+    // Structs
+    //
+
+    //
     // State
     //
-    string baseURI;
+
+    /// Base URI for all NFTs
+    string public baseURI;
 
     //
     // Events

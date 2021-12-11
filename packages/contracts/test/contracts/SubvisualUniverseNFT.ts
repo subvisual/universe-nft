@@ -2,16 +2,16 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import type { SubvisualUniverse } from "@root/typechain-types";
+import type { SubvisualUniverseNFT } from "@root/typechain-types";
 
 import { supportsInterface, behavesAsERC165 } from "../shared/erc165";
 
-describe("SubvisualUniverse", () => {
+describe("SubvisualUniverseNFT", () => {
   let owner: SignerWithAddress;
   let alice: SignerWithAddress;
   let bob: SignerWithAddress;
 
-  let nft: SubvisualUniverse;
+  let nft: SubvisualUniverseNFT;
 
   let chainId: number;
 
@@ -20,7 +20,11 @@ describe("SubvisualUniverse", () => {
 
     const NFT = await ethers.getContractFactory("SubvisualUniverse");
 
-    nft = (await NFT.deploy("Subvisual NFT", "SNFT", "https://universe.subvisual.com/nft/")) as SubvisualUniverse;
+    nft = (await NFT.deploy(
+      "Subvisual Universe NFT",
+      "SBVSL-UNI",
+      "https://universe.subvisual.com/nft/"
+    )) as SubvisualUniverseNFT;
 
     chainId = (await ethers.provider.getNetwork()).chainId;
   });
