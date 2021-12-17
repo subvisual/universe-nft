@@ -10,13 +10,14 @@ import { useWeb3React } from "@web3-react/core";
 
 interface NFTContext {
   contract?: Contract;
-  signer?: TypedDataSigner;
+  signer?: Signer;
+  typedSigner?: TypedDataSigner;
   isOperator: boolean;
   chainId?: number;
 }
 
 const Addresses: Record<number, string> = {
-  1337: "0x91b72467CFB9Bb79697AD58DBfcbd7dA8E4B65DA",
+  1337: "0xD2F960DD8333C408aAEd1924452D2b99b743fC7A",
 };
 
 const ABI: string[] = [
@@ -25,6 +26,7 @@ const ABI: string[] = [
   "function hasRole(bytes32 role, address account) view returns (bool)",
   "function coordsToId(uint32 x, uint32 y) view returns (uint256)",
   "function idToCoords(uint256 id) view returns(uint32 x,uint32 y)",
+  "function redeem(uint256 _tokenId,bytes _sig)",
 ];
 
 const NFTContext = createContext<NFTContext>({ isOperator: false });
@@ -37,11 +39,9 @@ export const NFTProvider: FC = ({ children }) => {
 
   // set signer
   useEffect(() => {
-    (async function () {
-      if (!library) return;
+    if (!library) return;
 
-      setSigner(library.getSigner(0));
-    })();
+    setSigner(library.getSigner(0));
   }, [library]);
 
   // set contract
@@ -50,7 +50,7 @@ export const NFTProvider: FC = ({ children }) => {
 
     const contract = new ethers.Contract(Addresses[chainId], ABI, library);
     setContract(contract);
-  }, [library, chainId]);
+  }, [signer, chainId, library]);
 
   // set isOperator
   useEffect(() => {
@@ -62,7 +62,9 @@ export const NFTProvider: FC = ({ children }) => {
   }, [contract]);
 
   return (
-    <NFTContext.Provider value={{ contract, isOperator, chainId, signer: signer as unknown as TypedDataSigner }}>
+    <NFTContext.Provider
+      value={{ contract, isOperator, chainId, signer, typedSigner: signer as unknown as TypedDataSigner }}
+    >
       {children}
     </NFTContext.Provider>
   );

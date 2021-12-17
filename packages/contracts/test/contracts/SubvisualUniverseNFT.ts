@@ -76,7 +76,8 @@ describe("SubvisualUniverseNFT", () => {
   });
 
   describe("redeem", () => {
-    it("can redeem tokens with a valid EIP712 approval", async () => {
+    it.only("can redeem tokens with a valid EIP712 approval", async () => {
+      const id = await nft.coordsToId(1, 2);
       const signature = await owner._signTypedData(
         // Domain
         {
@@ -93,12 +94,14 @@ describe("SubvisualUniverseNFT", () => {
           ],
         },
         // Value
-        { account: alice.address, tokenId: 62 }
+        { account: owner.address, tokenId: id }
       );
+      console.log(signature);
+      console.log(await nft.name());
 
-      await nft.connect(alice).redeem(62, signature);
+      await nft.connect(owner).redeem(id, signature);
 
-      expect(await nft.ownerOf(62)).to.equal(alice.address);
+      expect(await nft.ownerOf(id)).to.equal(owner.address);
     });
 
     it("does not allow redeeming the wrong NFT", async () => {

@@ -31,6 +31,11 @@ const config: HardhatUserConfig = {
     deployer: 0,
   },
   networks: {
+    hardhat: {
+      accounts: {
+        mnemonic: "core tornado motion pigeon kiss dish differ asthma much ritual black foil",
+      },
+    },
     ganache: {
       url: "http://127.0.0.1:7545",
       accounts: {

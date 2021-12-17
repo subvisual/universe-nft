@@ -1,7 +1,7 @@
 import React from "react";
 
 import type { FC } from "react";
-import { Connect, ApproveRedemption } from "./components";
+import { Connect, ApproveRedemption, Redeem } from "./components";
 
 import "./App.css";
 
@@ -9,18 +9,10 @@ const App: FC = () => {
   return (
     <main>
       <Connect />
-
       <hr />
-
       <ApproveRedemption />
-
       <hr />
-
-      <section>
-        <h1>Redeem</h1>
-        <p>TODO: this should be a minting form</p>
-      </section>
-
+      <Redeem />
       <hr />
 
       <section>

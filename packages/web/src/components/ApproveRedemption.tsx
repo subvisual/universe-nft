@@ -1,9 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { BigNumber } from "ethers";
 
 import { useNFT } from "../lib/NFTContext";
-
-import { BigNumber } from "ethers";
 
 interface Params {
   x?: string;
@@ -12,7 +11,7 @@ interface Params {
 }
 
 export const ApproveRedemption: FC = () => {
-  const { isOperator, contract, signer, chainId } = useNFT();
+  const { isOperator, contract, signer, typedSigner, chainId } = useNFT();
 
   const { register, handleSubmit } = useForm();
   const [data, setData] = useState<Params>({});
@@ -20,12 +19,15 @@ export const ApproveRedemption: FC = () => {
 
   useEffect(() => {
     (async function () {
-      if (!contract || !signer) return;
+      if (!contract || !typedSigner || !signer) return;
       if (!data.x || !data.y || !data.address) return;
 
       const id = await contract.coordsToId(BigNumber.from(data.x), BigNumber.from(data.y));
 
-      const sig = await signer._signTypedData(
+      console.log(await contract.name());
+      console.log(chainId);
+      console.log(contract.address);
+      const sig = await typedSigner._signTypedData(
         // Domain
         {
           name: await contract.name(),
@@ -44,42 +46,43 @@ export const ApproveRedemption: FC = () => {
         { account: data.address, tokenId: id }
       );
 
+      const tx = await contract.connect(signer).redeem(id, sig, { gasLimit: 5000000 });
+      console.log(await tx.wait());
       setSig(sig);
     })();
-  }, [data, contract, signer]);
-
-  if (!contract) {
-    return <div>Not Connected</div>;
-  }
-
-  if (!isOperator) {
-    return <>Not an operator</>;
-  }
+  }, [data, contract, typedSigner, signer]);
 
   return (
     <>
-      <h1>Pre-approve Redemption</h1>
+      <h2>Pre-approve Redemption</h2>
 
-      <form onSubmit={handleSubmit((data) => setData(data))}>
-        <div>
-          <label htmlFor="x">X</label>
-          <input {...register("x", { required: true })} />
-        </div>
+      {!contract && <div>Not Connected</div>}
+      {!isOperator && <div>Not an operator</div>}
 
-        <div>
-          <label htmlFor="y">Y</label>
-          <input {...register("y", { required: true })} />
-        </div>
+      {contract && isOperator ? (
+        <form onSubmit={handleSubmit((data) => setData(data))}>
+          <div>
+            <label htmlFor="x">X</label>
+            <input {...register("x", { required: true })} />
+          </div>
 
-        <div>
-          <label htmlFor="address">Address</label>
-          <input {...register("address", { required: true })} />
-        </div>
+          <div>
+            <label htmlFor="y">Y</label>
+            <input {...register("y", { required: true })} />
+          </div>
 
-        <input type="submit" />
-      </form>
+          <div>
+            <label htmlFor="address">Address</label>
+            <input {...register("address", { required: true })} />
+          </div>
 
-      <div>Signature: {sig}</div>
+          <input type="submit" />
+
+          <div>Signature: {sig}</div>
+        </form>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
