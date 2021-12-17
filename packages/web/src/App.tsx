@@ -1,17 +1,27 @@
 import React from "react";
 
-import { Connect } from "./components/Connect";
+import type { FC } from "react";
+import { Connect, ApproveRedemption } from "./components";
 
 import "./App.css";
 
-function App() {
+const App: FC = () => {
   return (
     <main>
       <Connect />
+
+      <hr />
+
+      <ApproveRedemption />
+
+      <hr />
+
       <section>
-        <h1>Mint</h1>
+        <h1>Redeem</h1>
         <p>TODO: this should be a minting form</p>
       </section>
+
+      <hr />
 
       <section>
         <h1>List</h1>
@@ -19,6 +29,6 @@ function App() {
       </section>
     </main>
   );
-}
+};
 
 export default App;

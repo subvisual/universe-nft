@@ -24,14 +24,14 @@ function getErrorMessage(error: Error) {
 }
 
 export const ConnectionStatus: FC = () => {
-  const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React<Web3Provider>();
+  const { library, chainId, account, deactivate, active, error } = useWeb3React<Web3Provider>();
 
   const [balance, setBalance] = useState(0);
   const [blockNumber, setBlockNumber] = useState<number | undefined>(0);
 
   // update block number
   useEffect(() => {
-    if (!!library) {
+    if (library) {
       library.getBlockNumber().then((n: number) => {
         setBlockNumber(n);
       });

@@ -1,6 +1,17 @@
 {
+  "name": "@subvisual-nft/monorepo",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/contracts",
+      "packages/web"
+    ],
+    "nohoist": [
+      "**/@nomiclabs/**",
+      "**/@typechain/**",
+      "**/typechain/**",
+      "**/typescript",
+      "**/ts-node"
+    ]
+  }
 }

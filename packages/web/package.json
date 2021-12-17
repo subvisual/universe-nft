@@ -1,5 +1,5 @@
 {
-  "name": "@subvisual-universe-nft/web",
+  "name": "@subvisual-nft/web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,14 +11,17 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@typescript-eslint/parser": "^5.7.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.2.8",
+    "ethers": "^5.5.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.22.1",
     "react-router-dom": "^6.1.0",
     "react-scripts": "4.0.3",
-    "typescript": "^4.1.2",
+    "typescript": "^4.5.4",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -26,12 +29,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -44,5 +41,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "eslint": "^7.11.0",
+    "eslint-config-react-app": "^7.0.0",
+    "typescript": "^4.5.4"
   }
 }
