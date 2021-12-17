@@ -4,6 +4,7 @@ import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-waffle";
+import "hardhat-deploy";
 import "hardhat-gas-reporter";
 
 import type { HardhatUserConfig } from "hardhat/config";
@@ -23,6 +24,17 @@ const config: HardhatUserConfig = {
       optimizer: {
         enabled: true,
         runs: 1000,
+      },
+    },
+  },
+  namedAccounts: {
+    deployer: 0,
+  },
+  networks: {
+    ganache: {
+      url: "http://127.0.0.1:7545",
+      accounts: {
+        mnemonic: "core tornado motion pigeon kiss dish differ asthma much ritual black foil",
       },
     },
   },

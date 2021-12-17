@@ -1,5 +1,5 @@
 {
-  "name": "@subvisual-universe-nft/contracts",
+  "name": "@subvisual-nft/contracts",
   "version": "0.1.0",
   "description": "Subvisual Universe NFT - Contracts",
   "author": "miguel@subvisual.co",
@@ -17,6 +17,7 @@
     "@typechain/hardhat": "^3.0.0",
     "ethers": "^5.1.0",
     "hardhat": "^2.1.2",
+    "hardhat-deploy": "^0.9.14",
     "hardhat-gas-reporter": "^1.0.4",
     "lodash": "^4.17.21",
     "openzeppelin-solidity": "^4.2.0",
@@ -42,8 +43,8 @@
     "solhint": "^3.3.6"
   },
   "scripts": {
-    "sol:build": "hardhat compile",
-    "sol:test": "hardhat test",
-    "sol:lint": "solhint contracts/**.sol && prettier --check contracts/**/*.sol"
+    "build": "hardhat compile",
+    "test": "hardhat test",
+    "lint": "solhint contracts/**.sol && prettier --check contracts/**/*.sol"
   }
 }

@@ -6,6 +6,8 @@ import type { SubvisualUniverseNFT } from "@root/typechain-types";
 
 import { supportsInterface, behavesAsERC165 } from "../shared/erc165";
 
+const { BigNumber } = ethers;
+
 describe("SubvisualUniverseNFT", () => {
   let owner: SignerWithAddress;
   let alice: SignerWithAddress;
@@ -18,7 +20,7 @@ describe("SubvisualUniverseNFT", () => {
   beforeEach(async () => {
     [owner, alice, bob] = await ethers.getSigners();
 
-    const NFT = await ethers.getContractFactory("SubvisualUniverse");
+    const NFT = await ethers.getContractFactory("SubvisualUniverseNFT");
 
     nft = (await NFT.deploy(
       "Subvisual Universe NFT",
@@ -46,6 +48,30 @@ describe("SubvisualUniverseNFT", () => {
       await nft.grantRole(await nft.OPERATOR_ROLE(), alice.address);
 
       await nft.connect(alice).setBaseURI("something else");
+    });
+  });
+
+  describe("coordsToId", () => {
+    it("correctly converts coords to ids", async () => {
+      expect(await nft.coordsToId(1, 1)).to.equal(BigNumber.from("0x0100000000000000000000000000000001"));
+      expect(await nft.coordsToId(2, 1)).to.equal(BigNumber.from("0x0200000000000000000000000000000001"));
+      expect(await nft.coordsToId(2, 2)).to.equal(BigNumber.from("0x0200000000000000000000000000000002"));
+    });
+  });
+
+  describe("idToCoords", () => {
+    it("correctly converts ids to coords", async () => {
+      const r1 = await nft.idToCoords(BigNumber.from("0x0100000000000000000000000000000001"));
+      expect(r1.x).to.equal(1);
+      expect(r1.y).to.equal(1);
+
+      const r2 = await nft.idToCoords(BigNumber.from("0x0200000000000000000000000000000001"));
+      expect(r2.x).to.equal(2);
+      expect(r2.y).to.equal(1);
+
+      const r3 = await nft.idToCoords(BigNumber.from("0x0100000000000000000000000000000002"));
+      expect(r3.x).to.equal(1);
+      expect(r3.y).to.equal(2);
     });
   });
 

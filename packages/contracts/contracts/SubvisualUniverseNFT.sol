@@ -33,6 +33,9 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     /// Base URI for all NFTs
     string public baseURI;
 
+    uint32 public gridWidth;
+    uint32 public gridHheight;
+
     //
     // Events
     //
@@ -61,6 +64,15 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     //
     // Public API
     //
+
+     function coordsToId(uint32 x, uint32 y) external pure returns (uint256) {
+         return (uint256(x) << 128) + uint256(y);
+     }
+
+     function idToCoords(uint256 id) external pure returns(uint32 x,uint32 y) {
+         x = uint32(id >> 128);
+         y = uint32(id & ((2 << 128) - 1));
+     }
 
     /**
      * Updates the base URI
