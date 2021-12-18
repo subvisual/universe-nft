@@ -21,13 +21,25 @@ const Addresses: Record<number, string> = {
 };
 
 const ABI: string[] = [
+  // IERC721
+  "function balanceOf(address owner) view returns (uint256)",
+  "function ownerOf(uint256 id) view returns (address)",
+
+  // IERC721Metadata
+  "function tokenURI(uint256 id) view returns (string)",
+
+  // IERC721Enumerable
+  "function totalSupply() view returns (uint256)",
+  "function tokenOfOwnerByIndex(address owner, uint256 index) view returns (uint256)",
+  "function tokenByIndex(uint256 index) view returns (uint256)",
+
+  // SubvisualUniverseNFT
   "function OPERATOR_ROLE() view returns (bytes32)",
   "function name() view returns (string)",
   "function hasRole(bytes32 role, address account) view returns (bool)",
-  "function coordsToId(uint32 x, uint32 y) view returns (uint256)",
+  "function coordsToId(uint16 x, uint16 y) view returns (uint256)",
   "function idToCoords(uint256 id) view returns(uint32 x,uint32 y)",
   "function redeem(uint256 _tokenId, bytes _sig)",
-  "function check(uint256 tokenId, bytes _sig) view returns (uint256 id, bytes memory sig2, uint256 chainid, bytes32 hash, address recovered)",
 ];
 
 const NFTContext = createContext<NFTContext>({ isOperator: false });

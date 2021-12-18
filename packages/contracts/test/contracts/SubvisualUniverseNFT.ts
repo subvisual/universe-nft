@@ -18,14 +18,16 @@ describe("SubvisualUniverseNFT", () => {
   let chainId: number;
 
   beforeEach(async () => {
-    [alice, bob] = await ethers.getSigners();
+    [owner, alice, bob] = await ethers.getSigners();
 
     const NFT = await ethers.getContractFactory("SubvisualUniverseNFT");
 
     nft = (await NFT.deploy(
       "Subvisual Universe NFT",
       "SBVSL-UNI",
-      "https://universe.subvisual.com/nft/"
+      "https://universe.subvisual.com/nft/",
+      255,
+      255
     )) as SubvisualUniverseNFT;
 
     chainId = (await ethers.provider.getNetwork()).chainId;
@@ -53,35 +55,31 @@ describe("SubvisualUniverseNFT", () => {
 
   describe("coordsToId", () => {
     it("correctly converts coords to ids", async () => {
-      expect(await nft.coordsToId(1, 1)).to.equal(BigNumber.from("0x0100000000000000000000000000000001"));
-      expect(await nft.coordsToId(2, 1)).to.equal(BigNumber.from("0x0200000000000000000000000000000001"));
-      expect(await nft.coordsToId(2, 2)).to.equal(BigNumber.from("0x0200000000000000000000000000000002"));
+      expect(await nft.coordsToId(1, 1)).to.equal(BigNumber.from("0x010001"));
+      expect(await nft.coordsToId(2, 1)).to.equal(BigNumber.from("0x020001"));
+      expect(await nft.coordsToId(2, 2)).to.equal(BigNumber.from("0x020002"));
     });
   });
 
   describe("idToCoords", () => {
     it("correctly converts ids to coords", async () => {
-      const r1 = await nft.idToCoords(BigNumber.from("0x0100000000000000000000000000000001"));
+      const r1 = await nft.idToCoords(BigNumber.from("0x010001"));
       expect(r1.x).to.equal(1);
       expect(r1.y).to.equal(1);
 
-      const r2 = await nft.idToCoords(BigNumber.from("0x0200000000000000000000000000000001"));
+      const r2 = await nft.idToCoords(BigNumber.from("0x020001"));
       expect(r2.x).to.equal(2);
       expect(r2.y).to.equal(1);
 
-      const r3 = await nft.idToCoords(BigNumber.from("0x0100000000000000000000000000000002"));
+      const r3 = await nft.idToCoords(BigNumber.from("0x010002"));
       expect(r3.x).to.equal(1);
       expect(r3.y).to.equal(2);
     });
   });
 
   describe("redeem", () => {
-    it.only("can redeem tokens with a valid EIP712 approval", async () => {
-      nft = (await ethers.getContractFactory("SubvisualUniverseNFT")).attach(
-        "0x9ce37148F5E347E55857C22c012B0741e4733130"
-      ) as SubvisualUniverseNFT;
-
-      const id = 0; //await nft.coordsToId(BigNumber.from("1"), BigNumber.from("2"));
+    it("can redeem tokens with a valid EIP712 approval", async () => {
+      const id = await nft.coordsToId(BigNumber.from("1"), BigNumber.from("2"));
       const domain = {
         name: await nft.name(),
         version: "1.0.0",
@@ -95,11 +93,9 @@ describe("SubvisualUniverseNFT", () => {
         ],
       };
       const value = { account: alice.address, tokenId: id.toString() };
-      const sig = await alice._signTypedData(domain, types, value);
+      const sig = await owner._signTypedData(domain, types, value);
 
-      console.log(domain, types, value, sig);
-      console.log(await nft.connect(alice).check(id, sig));
-      // const tx = await nft.connect(alice).redeem(id, sig);
+      const tx = await nft.connect(alice).redeem(id, sig);
 
       expect(await nft.ownerOf(id)).to.equal(alice.address);
     });

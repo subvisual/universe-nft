@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await deploy("SubvisualUniverseNFT", {
     from: deployer,
-    args: ["Subvisual Universe NFT", "SV-UNI", "https://nft.subvisual.com/"],
+    args: ["Subvisual Universe NFT", "SV-UNI", "https://nft.subvisual.com/", 255, 255],
     log: true,
   });
 };

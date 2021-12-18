@@ -1,7 +1,7 @@
 import React from "react";
 
 import type { FC } from "react";
-import { Connect, ApproveRedemption, Redeem } from "./components";
+import { Connect, ApproveRedemption, Redeem, Yours, List } from "./components";
 
 import "./App.css";
 
@@ -14,11 +14,9 @@ const App: FC = () => {
       <hr />
       <Redeem />
       <hr />
-
-      <section>
-        <h1>List</h1>
-        <p>TODO: this should show the current grid, with non-minted items still greyed out</p>
-      </section>
+      <Yours />
+      <hr />
+      <List />
     </main>
   );
 };

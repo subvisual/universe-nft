@@ -1,7 +1,6 @@
 import { FC, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { BigNumber } from "ethers";
-import { ethers } from "ethers";
 
 import { useNFT } from "../lib/NFTContext";
 

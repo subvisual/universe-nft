@@ -66,7 +66,7 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     // Public API
     //
 
-     function coordsToId(uint8 x, uint8 y) external pure returns (uint256) {
+     function coordsToId(uint16 x, uint16 y) external pure returns (uint256) {
          return (uint256(x) << 16) + uint256(y);
      }
 
