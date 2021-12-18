@@ -23,31 +23,22 @@ export const ApproveRedemption: FC = () => {
       if (!data.x || !data.y || !data.address) return;
 
       const id = await contract.coordsToId(BigNumber.from(data.x), BigNumber.from(data.y));
+      const domain = {
+        name: await contract.name(),
+        version: "1.0.0",
+        chainId,
+        verifyingContract: contract.address,
+      };
+      const types = {
+        Mint: [
+          { name: "account", type: "address" },
+          { name: "tokenId", type: "uint256" },
+        ],
+      };
+      const value = { account: data.address, tokenId: id };
 
-      console.log(await contract.name());
-      console.log(chainId);
-      console.log(contract.address);
-      const sig = await typedSigner._signTypedData(
-        // Domain
-        {
-          name: await contract.name(),
-          version: "1.0.0",
-          chainId,
-          verifyingContract: contract.address,
-        },
-        // Types
-        {
-          Mint: [
-            { name: "account", type: "address" },
-            { name: "tokenId", type: "uint256" },
-          ],
-        },
-        // Value
-        { account: data.address, tokenId: id }
-      );
+      const sig = await typedSigner._signTypedData(domain, types, value);
 
-      const tx = await contract.connect(signer).redeem(id, sig, { gasLimit: 5000000 });
-      console.log(await tx.wait());
       setSig(sig);
     })();
   }, [data, contract, typedSigner, signer]);

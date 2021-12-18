@@ -18,7 +18,7 @@ describe("SubvisualUniverseNFT", () => {
   let chainId: number;
 
   beforeEach(async () => {
-    [owner, alice, bob] = await ethers.getSigners();
+    [alice, bob] = await ethers.getSigners();
 
     const NFT = await ethers.getContractFactory("SubvisualUniverseNFT");
 
@@ -77,31 +77,31 @@ describe("SubvisualUniverseNFT", () => {
 
   describe("redeem", () => {
     it.only("can redeem tokens with a valid EIP712 approval", async () => {
-      const id = await nft.coordsToId(1, 2);
-      const signature = await owner._signTypedData(
-        // Domain
-        {
-          name: await nft.name(),
-          version: "1.0.0",
-          chainId,
-          verifyingContract: nft.address,
-        },
-        // Types
-        {
-          Mint: [
-            { name: "account", type: "address" },
-            { name: "tokenId", type: "uint256" },
-          ],
-        },
-        // Value
-        { account: owner.address, tokenId: id }
-      );
-      console.log(signature);
-      console.log(await nft.name());
+      nft = (await ethers.getContractFactory("SubvisualUniverseNFT")).attach(
+        "0x9ce37148F5E347E55857C22c012B0741e4733130"
+      ) as SubvisualUniverseNFT;
 
-      await nft.connect(owner).redeem(id, signature);
+      const id = 0; //await nft.coordsToId(BigNumber.from("1"), BigNumber.from("2"));
+      const domain = {
+        name: await nft.name(),
+        version: "1.0.0",
+        chainId,
+        verifyingContract: nft.address,
+      };
+      const types = {
+        Mint: [
+          { name: "account", type: "address" },
+          { name: "tokenId", type: "uint256" },
+        ],
+      };
+      const value = { account: alice.address, tokenId: id.toString() };
+      const sig = await alice._signTypedData(domain, types, value);
 
-      expect(await nft.ownerOf(id)).to.equal(owner.address);
+      console.log(domain, types, value, sig);
+      console.log(await nft.connect(alice).check(id, sig));
+      // const tx = await nft.connect(alice).redeem(id, sig);
+
+      expect(await nft.ownerOf(id)).to.equal(alice.address);
     });
 
     it("does not allow redeeming the wrong NFT", async () => {

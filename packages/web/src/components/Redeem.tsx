@@ -20,16 +20,11 @@ export const Redeem: FC = () => {
     (data: Params) => {
       (async function () {
         if (!contract || !signer || !data.sig) return;
-        console.log(signer);
 
         try {
           const id = await contract.coordsToId(BigNumber.from(data.x), BigNumber.from(data.y));
-          console.log(data.sig);
 
-          const tx = await contract.connect(signer).redeem(id, ethers.utils.arrayify(data.sig), { gasLimit: 5000000 });
-
-          const receipt = await tx.wait();
-          console.log(receipt);
+          await contract.connect(signer).redeem(id, data.sig, { gasLimit: 5000000 });
         } catch (err) {
           console.log(err);
         }

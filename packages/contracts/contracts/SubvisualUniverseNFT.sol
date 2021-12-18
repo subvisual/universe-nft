@@ -22,8 +22,6 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     // Mint approval EIP712 TypeHash
     bytes32 public constant MINT_TYPEHASH = keccak256("Mint(address account,uint256 tokenId)");
 
-    event Event(uint256 indexed x, uint256 y, address indexed signer);
-
     //
     // Structs
     //
@@ -96,10 +94,10 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
      * @param _sig EIP712 signature to validate
      */
     function redeem(uint256 _tokenId, bytes calldata _sig) external {
-        emit Event(1, 2, ECDSA.recover(_hash(_msgSender(), _tokenId), _sig));
         require(_verify(_hash(_msgSender(), _tokenId), _sig));
         _safeMint(_msgSender(), _tokenId);
     }
+
 
     /**
      * Mints a new NFT on behalf of an account
@@ -152,6 +150,7 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     function _hash(address _account, uint256 _tokenId) internal view returns (bytes32) {
         return _hashTypedDataV4(keccak256(abi.encode(MINT_TYPEHASH, _account, _tokenId)));
     }
+
 
     /**
      * Verifies a mint approval

@@ -8,7 +8,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Spinner } from "./Spinner";
 import { ConnectionStatus } from "./ConnectionStatus";
 
-const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42, 1337] });
+const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42, 1337, 31337] });
 
 export const Connect: FC = () => {
   const { connector, activate } = useWeb3React<Web3Provider>();

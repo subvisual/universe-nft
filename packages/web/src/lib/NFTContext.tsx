@@ -17,7 +17,7 @@ interface NFTContext {
 }
 
 const Addresses: Record<number, string> = {
-  1337: "0xD2F960DD8333C408aAEd1924452D2b99b743fC7A",
+  31337: "0x9ce37148F5E347E55857C22c012B0741e4733130",
 };
 
 const ABI: string[] = [
@@ -26,7 +26,8 @@ const ABI: string[] = [
   "function hasRole(bytes32 role, address account) view returns (bool)",
   "function coordsToId(uint32 x, uint32 y) view returns (uint256)",
   "function idToCoords(uint256 id) view returns(uint32 x,uint32 y)",
-  "function redeem(uint256 _tokenId,bytes _sig)",
+  "function redeem(uint256 _tokenId, bytes _sig)",
+  "function check(uint256 tokenId, bytes _sig) view returns (uint256 id, bytes memory sig2, uint256 chainid, bytes32 hash, address recovered)",
 ];
 
 const NFTContext = createContext<NFTContext>({ isOperator: false });
