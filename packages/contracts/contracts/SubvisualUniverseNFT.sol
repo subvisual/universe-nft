@@ -23,18 +23,14 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     bytes32 public constant MINT_TYPEHASH = keccak256("Mint(address account,uint256 tokenId)");
 
     //
-    // Structs
-    //
-
-    //
     // State
     //
 
     /// Base URI for all NFTs
     string public baseURI;
 
-    uint32 public gridWidth;
-    uint32 public gridHheight;
+    uint16 public width;
+    uint16 public height;
 
     //
     // Events
@@ -51,12 +47,17 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     constructor(
         string memory _name,
         string memory _symbol,
-        string memory _newBaseURI
+        string memory _newBaseURI,
+        uint16 _width,
+        uint16 _height
     ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(OPERATOR_ROLE, _msgSender());
 
         baseURI = _newBaseURI;
+
+        width = _width;
+        height = _height;
 
         emit BaseURIUpdated(_newBaseURI);
     }
@@ -65,13 +66,13 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     // Public API
     //
 
-     function coordsToId(uint32 x, uint32 y) external pure returns (uint256) {
-         return (uint256(x) << 128) + uint256(y);
+     function coordsToId(uint8 x, uint8 y) external pure returns (uint256) {
+         return (uint256(x) << 16) + uint256(y);
      }
 
-     function idToCoords(uint256 id) external pure returns(uint32 x,uint32 y) {
-         x = uint32(id >> 128);
-         y = uint32(id & ((2 << 128) - 1));
+     function idToCoords(uint256 id) public pure returns(uint16 x,uint16 y) {
+         x = uint16(id >> 16);
+         y = uint16(id & ((2 << 16) - 1));
      }
 
     /**
@@ -94,8 +95,16 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
      * @param _sig EIP712 signature to validate
      */
     function redeem(uint256 _tokenId, bytes calldata _sig) external {
+        require(inBoundaries(_tokenId), "not inside the grid");
+
         require(_verify(_hash(_msgSender(), _tokenId), _sig));
         _safeMint(_msgSender(), _tokenId);
+    }
+
+    function inBoundaries(uint256 _tokenId) public view returns (bool) {
+        (uint16 x, uint16 y) = idToCoords(_tokenId);
+
+        return (x < width && y < height);
     }
 
 
