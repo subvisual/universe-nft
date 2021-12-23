@@ -24,7 +24,8 @@ function getErrorMessage(error: Error) {
 }
 
 export const ConnectionStatus: FC = () => {
-  const { library, chainId, account, deactivate, active, error } = useWeb3React<Web3Provider>();
+  const { library, chainId, account, deactivate, active, error } =
+    useWeb3React<Web3Provider>();
 
   const [balance, setBalance] = useState(0);
   const [blockNumber, setBlockNumber] = useState<number | undefined>(0);
@@ -66,7 +67,9 @@ export const ConnectionStatus: FC = () => {
           <p>Balance: Ξ{formatEther(balance)}</p>
         </>
       )}
-      {(active || error) && <button onClick={() => deactivate()}>Deactivate</button>}
+      {(active || error) && (
+        <button onClick={() => deactivate()}>Deactivate</button>
+      )}
 
       {!!error && <h4>{getErrorMessage(error)}</h4>}
     </div>

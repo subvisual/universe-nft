@@ -36,6 +36,11 @@ const ABI: string[] = [
   // SubvisualUniverseNFT
   "function OPERATOR_ROLE() view returns (bytes32)",
   "function name() view returns (string)",
+  "function width() view returns (uint256)",
+  "function height() view returns (uint256)",
+  "function tokenData(uint256 tokenId) view returns (tuple(uint256 id, address owner, string uri))",
+  "function tokenDataByIndex(uint256 idx) view returns (tuple(uint256 id, address owner, string uri))",
+  "function tokensDataByRange(uint256 _from, uint256 _max) view returns (tuple(uint256 id, address owner, string uri)[])",
   "function hasRole(bytes32 role, address account) view returns (bool)",
   "function coordsToId(uint16 x, uint16 y) view returns (uint256)",
   "function idToCoords(uint256 id) view returns(uint32 x,uint32 y)",
@@ -68,15 +73,21 @@ export const NFTProvider: FC = ({ children }) => {
   // set isOperator
   useEffect(() => {
     (async function () {
-      if (!contract) return;
+      if (!contract || !account) return;
       const role = await contract.OPERATOR_ROLE();
       setIsOperator(await contract.hasRole(role, account));
     })();
-  }, [contract]);
+  }, [contract, account]);
 
   return (
     <NFTContext.Provider
-      value={{ contract, isOperator, chainId, signer, typedSigner: signer as unknown as TypedDataSigner }}
+      value={{
+        contract,
+        isOperator,
+        chainId,
+        signer,
+        typedSigner: signer as unknown as TypedDataSigner,
+      }}
     >
       {children}
     </NFTContext.Provider>

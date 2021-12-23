@@ -36,6 +36,8 @@
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "ethereum-waffle": "^3.4.0",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
@@ -43,6 +45,7 @@
     "solhint": "^3.3.6"
   },
   "scripts": {
+    "dev": "hardhat node",
     "build": "hardhat compile",
     "test": "hardhat test",
     "lint": "solhint contracts/**.sol && prettier --check contracts/**/*.sol"

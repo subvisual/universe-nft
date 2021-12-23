@@ -2,44 +2,84 @@ import { FC, useState, useEffect } from "react";
 
 import { useNFT } from "../lib/NFTContext";
 
+import { Cell } from "./Cell";
+
 interface TokenAndOwner {
   uri: string;
   owner: string;
 }
 
+const coordsToId = (x: number, y: number) => (x << 16) + y;
+
+const baseEmptyURI =
+  process.env.NODE_ENV == "production"
+    ? "https://nft.subvisual.com/empty/"
+    : "http://localhost:3000/empty-nfts/";
+
+const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
+
 export const List: FC = () => {
   const { contract } = useNFT();
   const [supply, setSupply] = useState(0);
-  const [tokensAndOwners, setTokensAndOwners] = useState<TokenAndOwner[]>([]);
+  const [tokensAndOwners, setTokensAndOwners] = useState<
+    Record<string, TokenAndOwner>
+  >({});
+  const W = 16;
+  const H = 16;
+  const cellSize = 80;
+  const [rows] = useState(Array(W).fill(0));
+  const [cols] = useState(Array(H).fill(0));
 
+  // collect list of all minted NFTs
   useEffect(() => {
     (async function () {
       if (!contract) return;
 
       const supply = await contract.totalSupply();
 
+      const tokens: Record<string, TokenAndOwner> = {};
       const promises = Array(supply.toNumber())
         .fill(0)
         .map(async (_, i) => {
-          const id = await contract.tokenByIndex(i);
-          return { uri: await contract.tokenURI(id), owner: await contract.ownerOf(id) };
+          const id = (await contract.tokenByIndex(i)).toNumber();
+          tokens[id] = {
+            uri: await contract.tokenURI(id),
+            owner: await contract.ownerOf(id),
+          };
         });
 
+      await Promise.all(promises);
+
       setSupply(supply.toString());
-      setTokensAndOwners(await Promise.all(promises));
+      setTokensAndOwners(tokens);
     })();
   }, [contract]);
 
   return (
     <div>
-      <h2>List</h2>
-      <span>Supply: {supply}</span>
-      <ul>
-        {tokensAndOwners.map(({ uri, owner }) => (
-          <li key={uri}>
-            {uri} (owned by {owner})
-          </li>
-        ))}
+      <ul
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${W}, ${cellSize}px)`,
+          listStyleType: "none",
+          padding: 0,
+          margin: "auto",
+        }}
+      >
+        {rows.map((_, x: number) =>
+          cols.map((_, y: number) => {
+            const id = coordsToId(x, y);
+            const token = tokensAndOwners[id];
+            return (
+              <li key={id} style={{ height: cellSize, width: cellSize }}>
+                <Cell
+                  uri={(token && token.uri) || emptyURI(x, y)}
+                  size={cellSize}
+                />
+              </li>
+            );
+          })
+        )}
       </ul>
     </div>
   );
