@@ -15,14 +15,17 @@ export const ApproveRedemption: FC = () => {
 
   const { register, handleSubmit } = useForm();
   const [data, setData] = useState<Params>({});
-  const [sig, setSig] = useState("");
+  const [redeemCode, setRedeemCode] = useState("");
 
   useEffect(() => {
     (async function () {
       if (!contract || !typedSigner || !signer) return;
       if (!data.x || !data.y || !data.address) return;
 
-      const id = await contract.coordsToId(BigNumber.from(data.x), BigNumber.from(data.y));
+      const id = await contract.coordsToId(
+        BigNumber.from(data.x),
+        BigNumber.from(data.y)
+      );
       const domain = {
         name: await contract.name(),
         version: "1.0.0",
@@ -39,7 +42,7 @@ export const ApproveRedemption: FC = () => {
 
       const sig = await typedSigner._signTypedData(domain, types, value);
 
-      setSig(sig);
+      setRedeemCode(`${data.x}-${data.y}-${sig}`);
     })();
   }, [data, contract, typedSigner, signer]);
 
@@ -69,7 +72,13 @@ export const ApproveRedemption: FC = () => {
 
           <input type="submit" />
 
-          <div>Signature: {sig}</div>
+          {redeemCode.length > 0 && (
+            <div>
+              <a href={`http://localhost:3000?redeemCode=${redeemCode}`}>
+                Redeem URL
+              </a>
+            </div>
+          )}
         </form>
       ) : (
         <></>

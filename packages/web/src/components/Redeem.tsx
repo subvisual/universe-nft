@@ -15,15 +15,30 @@ export const Redeem: FC = () => {
   const { contract, signer } = useNFT();
   const { register, handleSubmit } = useForm();
 
+  const redeemCode = new URLSearchParams(window.location.search).get(
+    "redeemCode"
+  );
+
+  const params = redeemCode ? redeemCode.split("-") : [];
+
+  const x = params[0];
+  const y = params[1];
+  const sig = params[2];
+
   const onSubmit = useCallback(
     (data: Params) => {
       (async function () {
         if (!contract || !signer || !data.sig) return;
 
         try {
-          const id = await contract.coordsToId(BigNumber.from(data.x), BigNumber.from(data.y));
+          const id = await contract.coordsToId(
+            BigNumber.from(data.x),
+            BigNumber.from(data.y)
+          );
 
-          await contract.connect(signer).redeem(id, data.sig, { gasLimit: 5000000 });
+          await contract
+            .connect(signer)
+            .redeem(id, data.sig, { gasLimit: 5000000 });
         } catch (err) {
           console.log(err);
         }
@@ -32,29 +47,31 @@ export const Redeem: FC = () => {
     [contract, signer]
   );
 
+  const onMint = useCallback(() => {
+    (async function () {
+      if (!contract || !signer) return;
+
+      try {
+        const id = await contract.coordsToId(x, y);
+        await contract.connect(signer).redeem(id, sig, { gasLimit: 5000000 });
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [contract, signer]);
+
+  if (!redeemCode || redeemCode.length == 0) {
+    return <></>;
+  }
+
   if (!signer) {
-    return <div>Not connected</div>;
+    return <div>Connect your wallet to redeem your NFT!</div>;
   }
 
   return (
     <>
       <h2>Mint</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="x">X</label>
-          <input {...register("x", { required: true })} />
-        </div>
-        <div>
-          <label htmlFor="y">Y</label>
-          <input {...register("y", { required: true })} />
-        </div>
-        <div>
-          <label htmlFor="sig">Signature</label>
-          <input {...register("sig", { required: true })} />
-        </div>
-
-        <input type="submit" value="Mint" />
-      </form>
+      <button onClick={onMint}>Redeem!</button>
     </>
   );
 };

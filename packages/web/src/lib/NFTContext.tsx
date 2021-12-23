@@ -57,7 +57,7 @@ export const NFTProvider: FC = ({ children }) => {
 
   // set signer
   useEffect(() => {
-    if (!library) return;
+    if (!library || !account) return;
 
     setSigner(library.getSigner(0));
   }, [library]);
