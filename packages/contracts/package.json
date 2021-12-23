@@ -47,6 +47,7 @@
   "scripts": {
     "dev": "hardhat node",
     "build": "hardhat compile",
+    "export": "hardhat deploy --export ../web/src/lib/abis.json",
     "test": "hardhat test",
     "lint": "solhint contracts/**.sol && prettier --check contracts/**/*.sol"
   }

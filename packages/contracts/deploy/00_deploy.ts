@@ -37,9 +37,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const [owner, alice] = await ethers.getSigners();
     const nft = SubvisualUniverseNFT__factory.connect(address, owner);
 
-    await nft.redeemFor(owner.address, await nft.coordsToId(0, 0));
-    await nft.redeemFor(owner.address, await nft.coordsToId(0, 1));
-    await nft.redeemFor(alice.address, await nft.coordsToId(1, 0));
+    // await nft.redeemFor(owner.address, await nft.coordsToId(0, 0));
+    // await nft.redeemFor(owner.address, await nft.coordsToId(0, 1));
+    // await nft.redeemFor(alice.address, await nft.coordsToId(1, 0));
   }
 };
 

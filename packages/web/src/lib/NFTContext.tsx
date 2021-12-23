@@ -16,6 +16,8 @@ interface NFTContext {
   chainId?: number;
 }
 
+import * as HardhatExports from "./abis.json";
+
 const Addresses: Record<number, string> = {
   31337: "0x9ce37148F5E347E55857C22c012B0741e4733130",
 };
@@ -55,7 +57,6 @@ export const NFTProvider: FC = ({ children }) => {
   const [isOperator, setIsOperator] = useState(false);
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
 
-  // set signer
   useEffect(() => {
     if (!library || !account) return;
 
@@ -65,6 +66,8 @@ export const NFTProvider: FC = ({ children }) => {
   // set contract
   useEffect(() => {
     if (!library || !chainId) return;
+
+    const hardhatExports = (HardhatExports as any)[chainId.toString()];
 
     const contract = new ethers.Contract(Addresses[chainId], ABI, library);
     setContract(contract);

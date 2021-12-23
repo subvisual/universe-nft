@@ -24,9 +24,11 @@ export const List: FC = () => {
   const [tokensAndOwners, setTokensAndOwners] = useState<
     Record<string, TokenAndOwner>
   >({});
-  const W = 16;
-  const H = 16;
-  const cellSize = 80;
+  const W = 21;
+  const H = 21;
+  const startX = 100;
+  const startY = 100;
+  const cellSize = 70;
   const [rows] = useState(Array(W).fill(0));
   const [cols] = useState(Array(H).fill(0));
 
@@ -66,8 +68,10 @@ export const List: FC = () => {
           margin: "auto",
         }}
       >
-        {rows.map((_, x: number) =>
-          cols.map((_, y: number) => {
+        {rows.map((_, idxX: number) =>
+          cols.map((_, idxY: number) => {
+            const x = idxX + startX;
+            const y = idxY + startY;
             const id = coordsToId(x, y);
             const token = tokensAndOwners[id];
             return (
