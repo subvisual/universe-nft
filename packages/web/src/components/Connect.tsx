@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { FC } from "react";
 
 import { useWeb3React } from "@web3-react/core";
@@ -7,7 +7,6 @@ import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
 
 import { Spinner } from "./Spinner";
-import { ConnectionStatus } from "./ConnectionStatus";
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 31337],
@@ -35,7 +34,6 @@ export const Connect: FC = () => {
 
   return (
     <div>
-      <ConnectionStatus />
       <button
         style={{
           height: "3rem",
