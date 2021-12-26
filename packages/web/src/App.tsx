@@ -2,21 +2,12 @@ import React from "react";
 
 import type { FC } from "react";
 import { Connect, Redeem, Yours, List } from "./components";
+import { IndexController } from "./controllers";
 
 import "./App.css";
 
 const App: FC = () => {
-  return (
-    <main>
-      <Connect />
-      <hr />
-      <Redeem />
-      <hr />
-      <Yours />
-      <hr />
-      <List />
-    </main>
-  );
+  return <IndexController />
 };
 
 export default App;
