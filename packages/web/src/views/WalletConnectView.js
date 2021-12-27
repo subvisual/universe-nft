@@ -101,8 +101,8 @@ class WalletConnectView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="af-class-section-2 af-class-wf-section">
-            {map(proxies['wallet-connect-btn'], props => <a href="#" {...{...props, className: `af-class-button-2 w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Connect Metamask</React.Fragment>}</a>)}
+          <div className="section-2 wf-section">
+            {map(proxies['wallet-connect-btn'], props => <a href="#" {...{...props, className: `button-2 w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Connect Metamask</React.Fragment>}</a>)}
           </div>
         </span>
       </span>
