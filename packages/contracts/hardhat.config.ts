@@ -29,6 +29,9 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     deployer: 0,
+    alice: 1,
+    bob: 2,
+    carol: 3,
   },
   networks: {
     hardhat: {

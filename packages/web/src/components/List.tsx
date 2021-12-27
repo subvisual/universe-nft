@@ -13,8 +13,8 @@ const coordsToId = (x: number, y: number) => (x << 16) + y;
 
 const baseEmptyURI =
   process.env.NODE_ENV == "production"
-    ? "https://nft.subvisual.com/empty/"
-    : "http://localhost:3000/empty-nfts/";
+    ? "https://holidays.subvisual.com/empty/"
+    : "http://localhost:3000/empty/";
 
 const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
 
@@ -65,6 +65,7 @@ export const List: FC = () => {
           gridTemplateColumns: `repeat(${W}, ${cellSize}px)`,
           listStyleType: "none",
           padding: 0,
+          rowGap: 1,
           margin: "auto",
         }}
       >
@@ -75,7 +76,10 @@ export const List: FC = () => {
             const id = coordsToId(x, y);
             const token = tokensAndOwners[id];
             return (
-              <li key={id} style={{ height: cellSize, width: cellSize }}>
+              <li
+                key={id}
+                style={{ padding: 1, height: cellSize, width: cellSize }}
+              >
                 <Cell
                   uri={(token && token.uri) || emptyURI(x, y)}
                   size={cellSize}
