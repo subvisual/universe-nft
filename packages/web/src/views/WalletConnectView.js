@@ -1,63 +1,62 @@
 /* eslint-disable */
 
-import React from "react";
-import { createScope, map, transformProxies } from "./helpers";
+import React from 'react'
+import { createScope, map, transformProxies } from './helpers'
+import WalletConnectBtnView from './WalletConnectBtnView'
 
-const scripts = [];
+const scripts = [
 
-let Controller;
+]
+
+let Controller
 
 class WalletConnectView extends React.Component {
   static get Controller() {
-    if (Controller) return Controller;
+    if (Controller) return Controller
 
     try {
-      Controller = require("../controllers/WalletConnectController");
-      Controller = Controller.default || Controller;
+      Controller = require('../controllers/WalletConnectController')
+      Controller = Controller.default || Controller
 
-      return Controller;
-    } catch (e) {
-      if (e.code == "MODULE_NOT_FOUND") {
-        Controller = WalletConnectView;
+      return Controller
+    }
+    catch (e) {
+      if (e.code == 'MODULE_NOT_FOUND') {
+        Controller = WalletConnectView
 
-        return Controller;
+        return Controller
       }
 
-      throw e;
+      throw e
     }
   }
 
   componentDidMount() {
     /* View has no WebFlow data attributes */
 
-    scripts.concat(null).reduce((active, next) =>
-      Promise.resolve(active).then((active) => {
-        const loading = active.loading.then((script) => {
-          new Function(`
+    scripts.concat(null).reduce((active, next) => Promise.resolve(active).then((active) => {
+      const loading = active.loading.then((script) => {
+        new Function(`
           with (this) {
             eval(arguments[0])
           }
-        `).call(window, script);
+        `).call(window, script)
 
-          return next;
-        });
-
-        return active.isAsync ? next : loading;
+        return next
       })
-    );
+
+      return active.isAsync ? next : loading
+    }))
   }
 
   render() {
-    const proxies =
-      WalletConnectView.Controller !== WalletConnectView
-        ? transformProxies(this.props.children)
-        : {};
+    const proxies = WalletConnectView.Controller !== WalletConnectView ? transformProxies(this.props.children) : {
+
+    }
 
     return (
       <span>
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
+        <style dangerouslySetInnerHTML={{ __html: `
           @import url(/css/normalize.css);
           @import url(/css/webflow.css);
           @import url(/css/subvisual-holidays.webflow.css);
@@ -101,20 +100,17 @@ class WalletConnectView extends React.Component {
           .w-webflow-badge{
           	display: none !important;
           }
-        `,
-          }}
-        />
+        ` }} />
         <span className="af-view">
-          <a href="#" className="button-2 w-button">
-            Connect Metamask
-          </a>
+          <div className="af-class-section-2 af-class-wf-section">
+            <WalletConnectBtnView.Controller />
+          </div>
         </span>
       </span>
-    );
+    )
   }
 }
 
-export default WalletConnectView;
+export default WalletConnectView
 
 /* eslint-enable */
-
