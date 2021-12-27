@@ -101,7 +101,7 @@ class GridView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div id="react-root" className="af-class-wf-section">
+          <div id="react-root" className="wf-section">
             <div>[React grid goes in here - Do not remove this section]</div>
           </div>
         </span>
