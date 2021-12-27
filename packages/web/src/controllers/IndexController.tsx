@@ -7,6 +7,11 @@ export const IndexController: FC = () => {
   return (
     <IndexView>
       {/* @ts-ignore */}
+      <af-walletconnectbutton>
+        <p>asd</p>
+        {/* @ts-ignore */}
+      </af-walletconnectbutton>
+      {/* @ts-ignore */}
       <afroot>
         <Connect />
         <hr />
