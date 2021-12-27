@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { createScope, map, transformProxies } from './helpers'
-import WalletConnectBtnView from './WalletConnectBtnView'
 
 const scripts = [
 
@@ -51,7 +50,7 @@ class WalletConnectView extends React.Component {
 
   render() {
     const proxies = WalletConnectView.Controller !== WalletConnectView ? transformProxies(this.props.children) : {
-
+      'wallet-connect-btn': [],
     }
 
     return (
@@ -102,8 +101,8 @@ class WalletConnectView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="section-2 wf-section">
-            <WalletConnectBtnView.Controller />
+          <div className="af-class-section-2 af-class-wf-section">
+            {map(proxies['wallet-connect-btn'], props => <a href="#" {...{...props, className: `af-class-button-2 w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Connect Metamask</React.Fragment>}</a>)}
           </div>
         </span>
       </span>
