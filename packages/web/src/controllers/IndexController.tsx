@@ -6,6 +6,7 @@ import IndexView from "../views/IndexView";
 const IndexController: FC = () => {
   return (
     <IndexView>
+      <wallet-connect-btn>
       {/* @ts-ignore */}
       <afroot>
         <Connect />

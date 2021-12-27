@@ -9,19 +9,19 @@ const scripts = [
 
 let Controller
 
-class MetamaskConnectView extends React.Component {
+class GridView extends React.Component {
   static get Controller() {
     if (Controller) return Controller
 
     try {
-      Controller = require('../controllers/MetamaskConnectController')
+      Controller = require('../controllers/GridController')
       Controller = Controller.default || Controller
 
       return Controller
     }
     catch (e) {
       if (e.code == 'MODULE_NOT_FOUND') {
-        Controller = MetamaskConnectView
+        Controller = GridView
 
         return Controller
       }
@@ -49,7 +49,7 @@ class MetamaskConnectView extends React.Component {
   }
 
   render() {
-    const proxies = MetamaskConnectView.Controller !== MetamaskConnectView ? transformProxies(this.props.children) : {
+    const proxies = GridView.Controller !== GridView ? transformProxies(this.props.children) : {
 
     }
 
@@ -101,13 +101,15 @@ class MetamaskConnectView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <a href="#" className="button-2 w-button">Connect Metamask</a>
+          <div id="react-root" className="wf-section">
+            <div>[React grid goes in here - Do not remove this section]</div>
+          </div>
         </span>
       </span>
     )
   }
 }
 
-export default MetamaskConnectView
+export default GridView
 
 /* eslint-enable */

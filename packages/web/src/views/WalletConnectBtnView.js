@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { createScope, map, transformProxies } from './helpers'
-import MetamaskConnectView from './MetamaskConnectView'
 
 const scripts = [
 
@@ -10,19 +9,19 @@ const scripts = [
 
 let Controller
 
-class WalletConnectButtonView extends React.Component {
+class WalletConnectBtnView extends React.Component {
   static get Controller() {
     if (Controller) return Controller
 
     try {
-      Controller = require('../controllers/WalletConnectButtonController')
+      Controller = require('../controllers/WalletConnectBtnController')
       Controller = Controller.default || Controller
 
       return Controller
     }
     catch (e) {
       if (e.code == 'MODULE_NOT_FOUND') {
-        Controller = WalletConnectButtonView
+        Controller = WalletConnectBtnView
 
         return Controller
       }
@@ -50,7 +49,7 @@ class WalletConnectButtonView extends React.Component {
   }
 
   render() {
-    const proxies = WalletConnectButtonView.Controller !== WalletConnectButtonView ? transformProxies(this.props.children) : {
+    const proxies = WalletConnectBtnView.Controller !== WalletConnectBtnView ? transformProxies(this.props.children) : {
 
     }
 
@@ -102,15 +101,13 @@ class WalletConnectButtonView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="section-2 wf-section">
-            <MetamaskConnectView.Controller />
-          </div>
+          <a href="#" className="button-2 w-button">Connect Metamask</a>
         </span>
       </span>
     )
   }
 }
 
-export default WalletConnectButtonView
+export default WalletConnectBtnView
 
 /* eslint-enable */

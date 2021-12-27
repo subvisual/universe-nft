@@ -102,7 +102,7 @@ class WalletConnectView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="af-class-section-2 af-class-wf-section">
+          <div className="section-2 wf-section">
             <WalletConnectBtnView.Controller />
           </div>
         </span>
