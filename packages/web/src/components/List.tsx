@@ -26,8 +26,8 @@ export const List: FC = () => {
   >({});
   const W = 21;
   const H = 21;
-  const startX = 100;
-  const startY = 100;
+  const startX = 101;
+  const startY = 101;
   const cellSize = 70;
   const [rows] = useState(Array(W).fill(0));
   const [cols] = useState(Array(H).fill(0));
