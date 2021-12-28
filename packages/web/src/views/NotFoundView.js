@@ -6,7 +6,6 @@ import { createScope, map, transformProxies } from './helpers'
 const scripts = [
   { loading: fetch("https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=61c33c9858a987caf6602ade").then(body => body.text()), isAsync: false },
   { loading: fetch("js/webflow.js").then(body => body.text()), isAsync: false },
-  { loading: Promise.resolve("const html=document.querySelector(\"html\"),madeBy=document.createComment(\"MADE BY ONDASTUDIO.CO\");document.insertBefore(madeBy,html),window.onpagehide=()=>{window.scrollTo(0,0)};const links=document.querySelectorAll(\".transition\");links.forEach(o=>{o.addEventListener(\"click\",e=>{e.preventDefault();const t=o.getAttribute(\"href\");setTimeout(()=>{window.location=t},500)})});const body=document.body;function letBodyScroll(e){body.style.overflow=e?\"hidden\":\"auto\"}const targetNode=document.querySelector(\".w-nav-button\"),config={attributes:!0,childList:!1,subtree:!1},callback=function(t,e){for(let e=0;e<t.length;e++)\"attributes\"===t[e].type&&letBodyScroll(t[e].target.classList.contains(\"w--open\"))},observer=new MutationObserver(callback);observer.observe(targetNode,config);var Webflow=Webflow||[];Webflow.push(function(){$(\".tab-wrapper\").on(\"click\",\".tab-prev, .tab-next\",function(){var e=$(this).hasClass(\"tab-prev\")?-1:1,t=$(this).parent().find(\".w-tab-menu\"),e=(e=t.find(\".w--current\").index()+e)>=t.children().length?0:e;t.find(\".w-tab-link\").eq(e).trigger(\"click\")})});"), isAsync: false },
 ]
 
 let Controller

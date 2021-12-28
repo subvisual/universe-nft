@@ -15,12 +15,6 @@ const scripts = [
     loading: fetch("js/webflow.js").then((body) => body.text()),
     isAsync: false,
   },
-  {
-    loading: Promise.resolve(
-      'const html=document.querySelector("html"),madeBy=document.createComment("MADE BY ONDASTUDIO.CO");document.insertBefore(madeBy,html),window.onpagehide=()=>{window.scrollTo(0,0)};const links=document.querySelectorAll(".transition");links.forEach(o=>{o.addEventListener("click",e=>{e.preventDefault();const t=o.getAttribute("href");setTimeout(()=>{window.location=t},500)})});const body=document.body;function letBodyScroll(e){body.style.overflow=e?"hidden":"auto"}const targetNode=document.querySelector(".w-nav-button"),config={attributes:!0,childList:!1,subtree:!1},callback=function(t,e){for(let e=0;e<t.length;e++)"attributes"===t[e].type&&letBodyScroll(t[e].target.classList.contains("w--open"))},observer=new MutationObserver(callback);observer.observe(targetNode,config);var Webflow=Webflow||[];Webflow.push(function(){$(".tab-wrapper").on("click",".tab-prev, .tab-next",function(){var e=$(this).hasClass("tab-prev")?-1:1,t=$(this).parent().find(".w-tab-menu"),e=(e=t.find(".w--current").index()+e)>=t.children().length?0:e;t.find(".w-tab-link").eq(e).trigger("click")})});'
-    ),
-    isAsync: false,
-  },
 ];
 
 let Controller;
@@ -74,8 +68,6 @@ class IndexView extends React.Component {
         : {
             "wallet-connect-btn": [],
           };
-    console.log("here");
-    console.log(proxies);
 
     return (
       <span>
@@ -208,7 +200,7 @@ class IndexView extends React.Component {
                   sizes="(max-width: 991px) 100vw, 97vw"
                   height={452}
                   srcSet="images/background-p-500.png 500w, images/background-p-800.png 800w, images/background-p-1080.png 1080w, images/background.png 2000w"
-                  alt
+                  alt=""
                   className="hero-image edge"
                 />
               </div>
@@ -225,7 +217,7 @@ class IndexView extends React.Component {
                     src="images/Subvisual_arrow.svg"
                     loading="lazy"
                     style={{ opacity: 0 }}
-                    alt
+                    alt=""
                     className="hero-arrow"
                   />
                   <div
@@ -358,4 +350,3 @@ class IndexView extends React.Component {
 export default IndexView;
 
 /* eslint-enable */
-

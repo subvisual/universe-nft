@@ -1,9 +1,9 @@
 import { DeployFunction } from "hardhat-deploy/types";
 
-const fixtures = [
-  { to: "deployer", x: 0, y: 0 },
-  { to: "deployer", x: 0, y: 1 },
-  { to: "alice", x: 1, y: 0 },
+const fixtures: { to: string; x: number; y: number }[] = [
+  // { to: "deployer", x: 0, y: 0 },
+  // { to: "deployer", x: 0, y: 1 },
+  // { to: "alice", x: 1, y: 0 },
 ];
 
 const coordsToId = (x: number, y: number) => (x << 16) + y;
