@@ -1,15 +1,9 @@
 import type { FC } from "react";
 
-import { Connect, Redeem, Yours, List } from "../components";
+import { List } from "../components";
 
 const GridController: FC = () => {
-  return (
-    <div>
-      <Redeem />
-      <hr />
-      <List />
-    </div>
-  );
+  return <List />;
 };
 
 export default GridController;

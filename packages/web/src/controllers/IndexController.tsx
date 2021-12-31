@@ -6,7 +6,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { Connect, Redeem, List } from "../components";
+import { List } from "../components";
 import IndexView from "../views/IndexView";
 
 import { useMint } from "../lib/MintContext";
@@ -63,11 +63,6 @@ const IndexController: FC = () => {
 
       {/* @ts-ignore */}
       <grid>
-        <p>asd</p>
-        <Connect />
-        <hr />
-        <Redeem />
-        <hr />
         <List />
         {/* @ts-ignore */}
       </grid>
