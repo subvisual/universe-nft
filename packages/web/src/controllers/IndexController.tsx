@@ -6,7 +6,6 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
 
-import { List } from "../components";
 import IndexView from "../views/IndexView";
 
 import { useMint } from "../lib/MintContext";

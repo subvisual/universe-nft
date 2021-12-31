@@ -70,10 +70,11 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
         string memory _newBaseURI,
         string memory _newURISuffix,
         uint16 _width,
-        uint16 _height
+        uint16 _height,
+        address _owner
     ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(OPERATOR_ROLE, _msgSender());
+        _setupRole(DEFAULT_ADMIN_ROLE, _owner);
+        _setupRole(OPERATOR_ROLE, _owner);
 
         baseURI = _newBaseURI;
         URISuffix = _newURISuffix;

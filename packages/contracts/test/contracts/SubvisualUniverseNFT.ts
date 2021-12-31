@@ -27,7 +27,8 @@ describe("SubvisualUniverseNFT", () => {
       "SBVSL-UNI",
       "https://universe.subvisual.com/nft/",
       255,
-      255
+      255,
+      owner.address
     )) as SubvisualUniverseNFT;
 
     chainId = (await ethers.provider.getNetwork()).chainId;
@@ -176,11 +177,15 @@ describe("SubvisualUniverseNFT", () => {
 
   describe("grantRole", () => {
     it("admins can assign new operators", async () => {
-      await nft.connect(owner).grantRole(await nft.OPERATOR_ROLE(), alice.address);
+      await nft
+        .connect(owner)
+        .grantRole(await nft.OPERATOR_ROLE(), alice.address);
     });
 
     it("non-admins can't assign new operators", async () => {
-      const action = nft.connect(alice).grantRole(await nft.OPERATOR_ROLE(), alice.address);
+      const action = nft
+        .connect(alice)
+        .grantRole(await nft.OPERATOR_ROLE(), alice.address);
 
       await expect(action).to.be.revertedWith(
         `AccessControl: account ${alice.address.toLowerCase()} is missing role ${await nft.DEFAULT_ADMIN_ROLE()}`

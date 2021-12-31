@@ -10,8 +10,9 @@ const func: DeployFunction = async function (hre) {
 
   await deploy("SubvisualUniverseNFT", {
     from: deployer,
-    args: ["Subvisual Universe NFT", "SV-UNI", uri, ".png", 255, 255],
+    args: ["Subvisual Universe NFT", "SV-UNI", uri, ".png", 255, 255, deployer],
     log: true,
+    deterministicDeployment: true,
   });
 };
 
