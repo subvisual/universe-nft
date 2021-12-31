@@ -101,8 +101,14 @@ class GridView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div id="react-root" className="wf-section">
-            <div>[React grid goes in here - Do not remove this section]</div>
+          <div id="react-root" className="af-class-section af-class-no-padding-up af-class-wf-section">
+            <div className="af-class-container af-class-nfts">
+              <div className="af-class-margin-top-40">
+                <div>[React grid goes in here - Do not remove this section]</div>
+                <div className="af-class-img-holder af-class-hide"><img src="images/background-tiles.png" loading="lazy" srcSet="images/background-tiles-p-500.png 500w, images/background-tiles.png 1501w" sizes="100vw" alt="A beautiful background made of tiles" className="af-class-img" /></div>
+                <div className="af-class-dropshadow-test" />
+              </div>
+            </div>
           </div>
         </span>
       </span>
