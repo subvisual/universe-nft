@@ -202,10 +202,6 @@ describe("SubvisualUniverseNFT", () => {
       expect(await supportsInterface(nft, "IERC721")).to.be.true;
     });
 
-    it("supports the IERC721Enumerable interface", async () => {
-      expect(await supportsInterface(nft, "IERC721Enumerable")).to.be.true;
-    });
-
     it("supports the IERC721Metadata interface", async () => {
       expect(await supportsInterface(nft, "IERC721Metadata")).to.be.true;
     });

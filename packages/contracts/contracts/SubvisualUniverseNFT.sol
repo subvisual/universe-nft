@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 
 import {IERC721, ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {IERC721Enumerable, ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IAccessControl, AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -12,7 +11,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 /**
  * An NFT representing the Subvisual Universe
  */
-contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
+contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
     using Strings for uint16;
 
     //
@@ -110,45 +109,6 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     }
 
     /**
-     * Returns info for a token based on his enumerable index
-     *
-     * @param idx token index
-     * @return token data
-     */
-    function tokenDataByIndex(uint256 idx) external view returns (Data memory) {
-        uint256 tokenId = tokenByIndex(idx);
-
-        return _getTokenData(tokenId);
-    }
-
-    /**
-     * Returns a limited list of token indexes from the enumerable set
-     *
-     * @param _from token index
-     * @param _max maximum amount of tokens to return
-     * @return a list of token IDs
-     */
-    function tokensDataByRange(uint256 _from, uint256 _max)
-        public
-        view
-        returns (Data[] memory)
-    {
-        uint256 to = _from + _max - 1;
-        if (totalSupply() - 1 < to) {
-            to = totalSupply() - 1;
-        }
-
-        uint256 len = to - _from + 1;
-        Data[] memory data = new Data[](len);
-
-        for (uint256 i = _from; i <= to; ++i) {
-            data[i] = _getTokenData(tokenByIndex(i));
-        }
-
-        return data;
-    }
-
-    /**
      * Updates the base URI
      *
      * @notice Only callable by an authorized operator
@@ -186,11 +146,6 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
         override(ERC721)
         returns (string memory)
     {
-        require(
-            _exists(tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
-        );
-
         (uint16 x, uint16 y) = idToCoords(tokenId);
 
         return
@@ -226,6 +181,12 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
         return (x < width && y < height);
     }
 
+    function _inBoundaries(uint256 _tokenId) internal view returns (bool) {
+        (uint16 x, uint16 y) = idToCoords(_tokenId);
+
+        return (x < width && y < height);
+    }
+
     /**
      * Mints a new NFT on behalf of an account
      *
@@ -256,12 +217,11 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
         public
         view
         virtual
-        override(ERC721Enumerable, AccessControl)
+        override(ERC721, AccessControl)
         returns (bool)
     {
         return
             interfaceId == type(IERC721).interfaceId ||
-            interfaceId == type(IERC721Enumerable).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
             interfaceId == type(IAccessControl).interfaceId ||
             super.supportsInterface(interfaceId);
@@ -272,7 +232,11 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
     //
 
     function _getTokenData(uint256 _id) internal view returns (Data memory) {
-        return Data(_id, ownerOf(_id), tokenURI(_id));
+        if (_exists(_id)) {
+            return Data(_id, ownerOf(_id), tokenURI(_id));
+        } else {
+            return Data(0, address(0), "");
+        }
     }
 
     /**

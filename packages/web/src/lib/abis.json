@@ -3,7 +3,7 @@
   "chainId": "31337",
   "contracts": {
     "SubvisualUniverseNFT": {
-      "address": "0x978a72dDeCD0b2f891e2912241297F422A58CCE2",
+      "address": "0x9EF8Fdf28805B4A32381D037b6579B5A752dA386",
       "abi": [
         {
           "inputs": [
@@ -743,25 +743,6 @@
           "inputs": [
             {
               "internalType": "uint256",
-              "name": "index",
-              "type": "uint256"
-            }
-          ],
-          "name": "tokenByIndex",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
               "name": "tokenId",
               "type": "uint256"
             }
@@ -798,66 +779,6 @@
           "inputs": [
             {
               "internalType": "uint256",
-              "name": "idx",
-              "type": "uint256"
-            }
-          ],
-          "name": "tokenDataByIndex",
-          "outputs": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "id",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "owner",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "uri",
-                  "type": "string"
-                }
-              ],
-              "internalType": "struct SubvisualUniverseNFT.Data",
-              "name": "",
-              "type": "tuple"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "index",
-              "type": "uint256"
-            }
-          ],
-          "name": "tokenOfOwnerByIndex",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
               "name": "tokenId",
               "type": "uint256"
             }
@@ -868,60 +789,6 @@
               "internalType": "string",
               "name": "",
               "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "_from",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "_max",
-              "type": "uint256"
-            }
-          ],
-          "name": "tokensDataByRange",
-          "outputs": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "id",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "owner",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "uri",
-                  "type": "string"
-                }
-              ],
-              "internalType": "struct SubvisualUniverseNFT.Data[]",
-              "name": "",
-              "type": "tuple[]"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "totalSupply",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
             }
           ],
           "stateMutability": "view",

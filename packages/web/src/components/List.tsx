@@ -1,28 +1,8 @@
-import { FC, useState, useEffect } from "react";
-
-import { useNFT } from "../lib/NFTContext";
+import { FC, useState } from "react";
 
 import { Cell } from "./Cell";
 
-interface TokenAndOwner {
-  uri: string;
-  owner: string;
-}
-
-const coordsToId = (x: number, y: number) => (x << 16) + y;
-
-const baseEmptyURI =
-  process.env.NODE_ENV == "production"
-    ? "https://holidays.subvisual.com/empty/"
-    : "http://localhost:3000/empty/";
-
-const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
-
 export const List: FC = () => {
-  const { contract } = useNFT();
-  const [tokensAndOwners, setTokensAndOwners] = useState<
-    Record<string, TokenAndOwner>
-  >({});
   const W = 21;
   const H = 21;
   const startX = 101;
@@ -30,30 +10,6 @@ export const List: FC = () => {
   const cellSize = 80;
   const [rows] = useState(Array(W).fill(0));
   const [cols] = useState(Array(H).fill(0));
-
-  // collect list of all minted NFTs
-  useEffect(() => {
-    (async function () {
-      if (!contract) return;
-
-      const supply = await contract.totalSupply();
-
-      const tokens: Record<string, TokenAndOwner> = {};
-      const promises = Array(supply.toNumber())
-        .fill(0)
-        .map(async (_, i) => {
-          const id = (await contract.tokenByIndex(i)).toNumber();
-          tokens[id] = {
-            uri: await contract.tokenURI(id),
-            owner: await contract.ownerOf(id),
-          };
-        });
-
-      await Promise.all(promises);
-
-      setTokensAndOwners(tokens);
-    })();
-  }, [contract]);
 
   return (
     <div>
@@ -72,17 +28,12 @@ export const List: FC = () => {
           cols.map((_, idxX: number) => {
             const x = idxX + startX;
             const y = idxY + startY;
-            const id = coordsToId(x, y);
-            const token = tokensAndOwners[id];
             return (
               <li
-                key={id}
+                key={`${x}x${y}`}
                 style={{ padding: 1, height: cellSize, width: cellSize }}
               >
-                <Cell
-                  uri={(token && token.uri) || emptyURI(x, y)}
-                  size={cellSize}
-                />
+                <Cell x={x} y={y} size={cellSize} />
               </li>
             );
           })
