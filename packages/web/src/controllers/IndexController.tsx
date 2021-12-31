@@ -1,13 +1,15 @@
 import type { FC } from "react";
-import { useEffect } from "react";
 
-import { Connect, Redeem, Yours, List } from "../components";
-import IndexView from "../views/IndexView";
-
+import { useEffect, useCallback, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
+
+import { Connect, Redeem, List } from "../components";
+import IndexView from "../views/IndexView";
+
+import { useMint } from "../lib/MintContext";
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 31337],
@@ -20,26 +22,45 @@ const network = new NetworkConnector({
   defaultChainId: 31337,
 });
 
-const IndexController: FC = () => {
-  const { connector, activate, account } = useWeb3React<Web3Provider>();
+interface Mint {
+  status?: string;
+  x?: string;
+  y?: string;
+  sig?: string;
+}
 
+const IndexController: FC = () => {
+  const { activate, account } = useWeb3React<Web3Provider>();
+  const mint = useMint();
+
+  const onConnectBtn = useCallback(
+    (e: any) => {
+      e.preventDefault();
+      activate(injected);
+    },
+    [injected, activate]
+  );
+
+  // connect to network provider
   useEffect(() => {
     activate(network);
   }, []);
 
-  useEffect(() => {
-    if (!account) return;
-
-    console.log(`connected to ${account}`);
-  }, [account]);
-
   return (
     <IndexView>
-      {/* @ts-ignore */}
-      <wallet-connect-btn onClick={() => activate(injected)}>
-        {account ? `Connected with ${account}` : "Connect To Metamask"}
-        {/* @ts-ignore */}
-      </wallet-connect-btn>
+      {account ? (
+        <af-metamask-connect-success />
+      ) : (
+        <af-metamask-connect-btn onClick={onConnectBtn}>
+          {account ? `Connected with ${account}` : "Connect To Metamask"}
+        </af-metamask-connect-btn>
+      )}
+
+      {/* mint view. due to limitations on appfairy, we can't isolate this in its own component */}
+      {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
+      {mint.minted && <af-mint-success />}
+      {mint.minted && <af-refresh-btn />}
+
       {/* @ts-ignore */}
       <grid>
         <p>asd</p>

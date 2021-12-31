@@ -4,8 +4,6 @@ import ReactDOM from "react-dom";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
 
-import { NFTProvider } from "./lib/NFTContext";
-
 import App from "./App";
 import "./index.css";
 
@@ -18,9 +16,7 @@ function getLibrary(provider: ExternalProvider): Web3Provider {
 ReactDOM.render(
   <React.StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
-      <NFTProvider>
-        <App />
-      </NFTProvider>
+      <App />
     </Web3ReactProvider>
   </React.StrictMode>,
   document.getElementById("root")

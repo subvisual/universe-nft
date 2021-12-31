@@ -20,7 +20,6 @@ const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
 
 export const List: FC = () => {
   const { contract } = useNFT();
-  const [supply, setSupply] = useState(0);
   const [tokensAndOwners, setTokensAndOwners] = useState<
     Record<string, TokenAndOwner>
   >({});
@@ -52,7 +51,6 @@ export const List: FC = () => {
 
       await Promise.all(promises);
 
-      setSupply(supply.toString());
       setTokensAndOwners(tokens);
     })();
   }, [contract]);
