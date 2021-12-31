@@ -50,6 +50,7 @@ const IndexController: FC = () => {
 
       {/* mint view. due to limitations on appfairy, we can't isolate this in its own component.
       each element needs to be a direct children of IndexController */}
+      {/* actually, I'm lying. this could all be solved by adding a `af-el=af-mint` attribute, in a webflow, to a section around all these elements */}
       {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
       {mint.minted && <af-mint-success />}
       {mint.minted && <af-refresh-btn />}
