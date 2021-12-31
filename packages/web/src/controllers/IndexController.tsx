@@ -56,7 +56,8 @@ const IndexController: FC = () => {
         </af-metamask-connect-btn>
       )}
 
-      {/* mint view. due to limitations on appfairy, we can't isolate this in its own component */}
+      {/* mint view. due to limitations on appfairy, we can't isolate this in its own component.
+      each element needs to be a direct children of IndexController */}
       {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
       {mint.minted && <af-mint-success />}
       {mint.minted && <af-refresh-btn />}
