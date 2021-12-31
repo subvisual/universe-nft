@@ -25,7 +25,8 @@ describe("SubvisualUniverseNFT", () => {
     nft = (await NFT.deploy(
       "Subvisual Universe NFT",
       "SBVSL-UNI",
-      "https://universe.subvisual.com/nft/",
+      "https://holidays.subvisual.com/minted/",
+      ".png",
       255,
       255,
       owner.address
@@ -171,7 +172,7 @@ describe("SubvisualUniverseNFT", () => {
       await nft.redeemFor(alice.address, 0);
       const uri = await nft.tokenURI(0);
 
-      expect(uri).to.equal("https://universe.subvisual.com/nft/0");
+      expect(uri).to.equal("https://holidays.subvisual.com/minted/0x0.png");
     });
   });
 
@@ -194,6 +195,9 @@ describe("SubvisualUniverseNFT", () => {
   });
 
   describe("supportsInterface", () => {
+    it("behaves as an ERC165", async () => {
+      expect(await behavesAsERC165(nft)).to.be.true;
+    });
     it("supports the IERC721 interface", async () => {
       expect(await supportsInterface(nft, "IERC721")).to.be.true;
     });

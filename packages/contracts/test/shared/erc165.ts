@@ -4,10 +4,16 @@ import { ethers } from "hardhat";
 import type { ERC165, InterfaceIDs } from "@root/typechain-types";
 
 export async function behavesAsERC165(contract: ERC165): Promise<boolean> {
-  return (await contract.supportsInterface("0x01ffc9a7")) && (await contract.supportsInterface("0xffffffff"));
+  return (
+    (await contract.supportsInterface("0x01ffc9a7")) &&
+    !(await contract.supportsInterface("0xffffffff"))
+  );
 }
 
-export async function supportsInterface(contract: ERC165, interf: string): Promise<boolean> {
+export async function supportsInterface(
+  contract: ERC165,
+  interf: string
+): Promise<boolean> {
   const InterfaceIDsFactory = await ethers.getContractFactory("InterfaceIDs");
   const interfaceIDs = (await InterfaceIDsFactory.deploy()) as InterfaceIDs;
 

@@ -5,7 +5,7 @@ const func: DeployFunction = async function (hre) {
   const { deploy } = hre.deployments;
 
   const uri = hre.network.live
-    ? "http://holidays.subvisual.com/minted/"
+    ? "https://holidays.subvisual.com/minted/"
     : "http://localhost:3000/minted/";
 
   await deploy("SubvisualUniverseNFT", {

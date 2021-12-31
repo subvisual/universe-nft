@@ -263,7 +263,8 @@ contract SubvisualUniverseNFT is ERC721Enumerable, AccessControl, EIP712 {
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Enumerable).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
-            interfaceId == type(IAccessControl).interfaceId;
+            interfaceId == type(IAccessControl).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     //
