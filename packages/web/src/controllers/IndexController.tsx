@@ -22,13 +22,6 @@ const network = new NetworkConnector({
   defaultChainId: 31337,
 });
 
-interface Mint {
-  status?: string;
-  x?: string;
-  y?: string;
-  sig?: string;
-}
-
 const IndexController: FC = () => {
   const { activate, account } = useWeb3React<Web3Provider>();
   const mint = useMint();
@@ -61,12 +54,6 @@ const IndexController: FC = () => {
       {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
       {mint.minted && <af-mint-success />}
       {mint.minted && <af-refresh-btn />}
-
-      {/* @ts-ignore */}
-      <grid>
-        <List />
-        {/* @ts-ignore */}
-      </grid>
     </IndexView>
   );
 };

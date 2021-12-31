@@ -2,8 +2,8 @@ import type { FC } from "react";
 
 import { List } from "../components";
 
-const GridController: FC = () => {
+const AfGridController: FC = () => {
   return <List />;
 };
 
-export default GridController;
+export default AfGridController;

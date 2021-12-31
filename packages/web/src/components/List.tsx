@@ -27,7 +27,7 @@ export const List: FC = () => {
   const H = 21;
   const startX = 101;
   const startY = 101;
-  const cellSize = 70;
+  const cellSize = 80;
   const [rows] = useState(Array(W).fill(0));
   const [cols] = useState(Array(H).fill(0));
 
@@ -61,6 +61,7 @@ export const List: FC = () => {
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${W}, ${cellSize}px)`,
+          justifyContent: "center",
           listStyleType: "none",
           padding: 0,
           rowGap: 1,
