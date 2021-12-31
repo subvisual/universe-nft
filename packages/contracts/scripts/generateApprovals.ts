@@ -2,38 +2,35 @@ import { ethers, network } from "hardhat";
 import { SubvisualUniverseNFT } from "../typechain-types";
 import { BigNumber } from "ethers";
 
-interface Recipient {
-  address: string;
-  x: number;
-  y: number;
-}
+import csv from "async-csv";
+import { promises as fs } from "fs";
 
-interface Config {
-  nft: string;
-  recipients: Recipient[];
-}
+const fixture = (name: string, address: string, x: number, y: number) => [
+  name,
+  "",
+  "",
+  "",
+  address,
+  "",
+  "",
+  x,
+  y,
+];
 
-const configs: Record<string, Config> = {
-  localhost: {
-    nft: "0x9ce37148F5E347E55857C22c012B0741e4733130",
-    recipients: [
-      { address: "0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2", x: 105, y: 105 },
-    ],
-  },
-  mainnet: {
-    nft: "TODO",
-    recipients: [],
-  },
-};
+const fixtures = [
+  fixture("Alice", "0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2", 103, 121),
+  fixture("Bob", "0x0606Af40D316662aC2e7194E88806057F834D60b", 108, 118),
+  fixture("Carol", "0xB641C6eF483C56aD6C2B44A9242C776d599D421c", 108, 117),
+];
 
 async function main() {
-  const SubvisualUniverseNFT = await ethers.getContractFactory(
-    "SubvisualUniverseNFT"
-  );
-
-  const config = configs[network.name];
-  const nft = SubvisualUniverseNFT.attach(config.nft);
   const [signer] = await ethers.getSigners();
+
+  const nft = (await ethers.getContractAt(
+    "SubvisualUniverseNFT",
+    "0x978a72dDeCD0b2f891e2912241297F422A58CCE2",
+    signer
+  )) as SubvisualUniverseNFT;
 
   const domain = {
     name: await nft.name(),
@@ -48,12 +45,40 @@ async function main() {
     ],
   };
 
-  const promises = config.recipients.map(async ({ address, x, y }) => {
-    const id = await nft.coordsToId(BigNumber.from(x), BigNumber.from(y));
-    const value = { account: address, tokenId: id };
+  let rows: any[] = [];
 
-    const sig = await signer._signTypedData(domain, types, value);
-    console.log(`${x}-${y}-${sig}`);
+  switch (network.name) {
+    case "hardhat":
+      rows = fixtures;
+      break;
+    case "localhost":
+      rows = fixtures;
+      break;
+    case "mainnet":
+      const csvString = await fs.readFile(
+        `${__dirname}/../../../people.csv`,
+        "utf-8"
+      );
+      rows = (await csv.parse(csvString)).splice(1);
+      break;
+  }
+
+  const promises = rows.map(async (row: any) => {
+    const [name, , , , originalAddress, ens, , x, y] = row;
+    const address =
+      ens.length > 0 && network.name == "mainnet"
+        ? await ethers.provider.resolveName(ens)
+        : originalAddress;
+
+    let redeemCode;
+    if (address) {
+      const id = await nft.coordsToId(x, y);
+      const value = { account: address, tokenId: id };
+      const sig = await signer._signTypedData(domain, types, value);
+      redeemCode = `${x}-${y}-${sig}`;
+    }
+
+    console.log(`${name}, ${address}, ${redeemCode}`);
   });
 
   await Promise.all(promises);
