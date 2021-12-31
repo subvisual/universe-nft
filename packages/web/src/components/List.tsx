@@ -13,22 +13,21 @@ const coordsToId = (x: number, y: number) => (x << 16) + y;
 
 const baseEmptyURI =
   process.env.NODE_ENV == "production"
-    ? "https://nft.subvisual.com/empty/"
-    : "http://localhost:3000/empty-nfts/";
+    ? "https://holidays.subvisual.com/empty/"
+    : "http://localhost:3000/empty/";
 
 const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
 
 export const List: FC = () => {
   const { contract } = useNFT();
-  const [supply, setSupply] = useState(0);
   const [tokensAndOwners, setTokensAndOwners] = useState<
     Record<string, TokenAndOwner>
   >({});
   const W = 21;
   const H = 21;
-  const startX = 100;
-  const startY = 100;
-  const cellSize = 70;
+  const startX = 101;
+  const startY = 101;
+  const cellSize = 80;
   const [rows] = useState(Array(W).fill(0));
   const [cols] = useState(Array(H).fill(0));
 
@@ -52,7 +51,6 @@ export const List: FC = () => {
 
       await Promise.all(promises);
 
-      setSupply(supply.toString());
       setTokensAndOwners(tokens);
     })();
   }, [contract]);
@@ -63,8 +61,10 @@ export const List: FC = () => {
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${W}, ${cellSize}px)`,
+          justifyContent: "center",
           listStyleType: "none",
           padding: 0,
+          rowGap: 1,
           margin: "auto",
         }}
       >
@@ -75,7 +75,10 @@ export const List: FC = () => {
             const id = coordsToId(x, y);
             const token = tokensAndOwners[id];
             return (
-              <li key={id} style={{ height: cellSize, width: cellSize }}>
+              <li
+                key={id}
+                style={{ padding: 1, height: cellSize, width: cellSize }}
+              >
                 <Cell
                   uri={(token && token.uri) || emptyURI(x, y)}
                   size={cellSize}

@@ -17,7 +17,7 @@ const configs: Record<string, Config> = {
   localhost: {
     nft: "0x9ce37148F5E347E55857C22c012B0741e4733130",
     recipients: [
-      { address: "0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2", x: 100, y: 103 },
+      { address: "0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2", x: 105, y: 105 },
     ],
   },
   mainnet: {
