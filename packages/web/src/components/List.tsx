@@ -68,8 +68,8 @@ export const List: FC = () => {
           margin: "auto",
         }}
       >
-        {rows.map((_, idxX: number) =>
-          cols.map((_, idxY: number) => {
+        {rows.map((_, idxY: number) =>
+          cols.map((_, idxX: number) => {
             const x = idxX + startX;
             const y = idxY + startY;
             const id = coordsToId(x, y);

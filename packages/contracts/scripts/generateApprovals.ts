@@ -64,7 +64,7 @@ async function main() {
   }
 
   const promises = rows.map(async (row: any) => {
-    const [name, , , , originalAddress, ens, , x, y] = row;
+    const [name, , , , originalAddress, ens, , y, x] = row;
     const address =
       ens.length > 0 && network.name == "mainnet"
         ? await ethers.provider.resolveName(ens)

@@ -58,6 +58,7 @@ export const MintProvider: FC = ({ children }) => {
 
   const onMintClick = useCallback(() => {
     (async function () {
+      console.log("here");
       if (!mintable || !contract || !signer || !params.sig) return;
 
       try {
