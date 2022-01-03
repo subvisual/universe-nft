@@ -11,11 +11,12 @@ import IndexView from "../views/IndexView";
 import { useMint } from "../lib/MintContext";
 
 const injected = new InjectedConnector({
-  supportedChainIds: [1, 31337],
+  supportedChainIds: [1, 4, 31337],
 });
 const network = new NetworkConnector({
   urls: {
-    // TODO 1
+    1: process.env.MAINNET_ALCHEMY_ENDPOINT!,
+    4: process.env.RINKEBY_ALCHEMY_ENDPOINT!,
     31337: "http://127.0.0.1:8545",
   },
   defaultChainId: 31337,

@@ -18,6 +18,7 @@
     "contracts:dev": "yarn workspace @subvisual-nft/contracts dev",
     "contracts:export": "yarn workspace @subvisual-nft/contracts export",
     "contracts:build": "yarn workspace @subvisual-nft/contracts build",
-    "web:dev": "yarn workspace @subvisual-nft/web start"
+    "web:dev": "yarn workspace @subvisual-nft/web start",
+    "web:deploy": "yarn workspace @subvisual-nft/web deploy"
   }
 }
