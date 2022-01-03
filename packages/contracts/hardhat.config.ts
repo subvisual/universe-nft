@@ -17,6 +17,11 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
   }
 });
 
+0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2
+
+const devMnemonic =
+  "core tornado motion pigeon kiss dish differ asthma much ritual black foil";
+
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.10",
@@ -36,15 +41,19 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       accounts: {
-        mnemonic:
-          "core tornado motion pigeon kiss dish differ asthma much ritual black foil",
+        mnemonic: devMnemonic,
       },
     },
-    ganache: {
-      url: "http://127.0.0.1:7545",
+    mainnet: {
+      url: process.env.MAINNET_ALCHEMY_ENDPOINT,
       accounts: {
-        mnemonic:
-          "core tornado motion pigeon kiss dish differ asthma much ritual black foil",
+        mnemonic: process.env.MAINNET_MNEMONIC,
+      },
+    },
+    rinkeby: {
+      url: process.env.RINKEY_ALCHEMY_ENDPOINT,
+      accounts: {
+        mnemonic: devMnemonic,
       },
     },
   },
