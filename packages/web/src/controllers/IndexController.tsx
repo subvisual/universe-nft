@@ -15,8 +15,8 @@ const injected = new InjectedConnector({
 });
 const network = new NetworkConnector({
   urls: {
-    1: process.env.MAINNET_ALCHEMY_ENDPOINT!,
-    4: process.env.RINKEBY_ALCHEMY_ENDPOINT!,
+    1: process.env.REACT_APP_MAINNET_ALCHEMY_ENDPOINT!,
+    4: process.env.REACT_APP_RINKEBY_ALCHEMY_ENDPOINT!,
     31337: "http://127.0.0.1:8545",
   },
   defaultChainId: 31337,

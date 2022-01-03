@@ -3,7 +3,7 @@
   "chainId": "31337",
   "contracts": {
     "SubvisualUniverseNFT": {
-      "address": "0x9EF8Fdf28805B4A32381D037b6579B5A752dA386",
+      "address": "0x26bb3a58dd048435b4A486478Cb4AA47A3ff1112",
       "abi": [
         {
           "inputs": [

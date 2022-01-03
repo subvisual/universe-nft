@@ -13,7 +13,7 @@ interface Props {
 
 const baseEmptyURI =
   process.env.NODE_ENV == "production"
-    ? "https://holidays.subvisual.com/empty/"
+    ? "https://holidays-test.subvisual.com/empty/"
     : "http://localhost:3000/empty/";
 
 const emptyURI = (x: number, y: number) => `${baseEmptyURI}/${x}x${y}.png`;
