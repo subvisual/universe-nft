@@ -6,7 +6,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { Web3Provider } from "@ethersproject/providers";
 
-import IndexView from "../views/IndexView";
+import AfActionsView from "../views/AfActionsView";
 
 import { useMint } from "../lib/MintContext";
 
@@ -22,9 +22,9 @@ const network = new NetworkConnector({
   defaultChainId: process.env.NODE_ENV === "production" ? 4 : 31337,
 });
 
-const IndexController: FC = () => {
+const AfActionsController: FC = () => {
   const { activate, account } = useWeb3React<Web3Provider>();
-  const mint = useMint();
+  const { mintable, minted, onMintClick } = useMint();
 
   const onConnectBtn = useCallback(
     (e: any) => {
@@ -40,23 +40,18 @@ const IndexController: FC = () => {
   }, []);
 
   return (
-    <IndexView>
+    <AfActionsView>
       {account ? (
         <af-metamask-connect-success />
       ) : (
-        <af-metamask-connect-btn onClick={onConnectBtn}>
-          {account ? `Connected with ${account}` : "Connect To Metamask"}
-        </af-metamask-connect-btn>
+        <af-metamask-connect-btn onClick={onConnectBtn} />
       )}
 
-      {/* mint view. due to limitations on appfairy, we can't isolate this in its own component.
-      each element needs to be a direct children of IndexController */}
-      {/* actually, I'm lying. this could all be solved by adding a `af-el=af-mint` attribute in a webflow section around all these elements */}
-      {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
-      {mint.minted && <af-mint-success />}
-      {mint.minted && <af-refresh-btn />}
-    </IndexView>
+      {mintable && <af-mint-btn onClick={onMintClick} />}
+      {minted && <af-mint-success />}
+      {minted && <af-refresh-btn />}
+    </AfActionsView>
   );
 };
 
-export default IndexController;
+export default AfActionsController;

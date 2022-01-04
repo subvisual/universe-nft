@@ -27,3 +27,4 @@ cache/
 typechain-types/
 docs/
 .openzeppelin/
+deployments/localhost

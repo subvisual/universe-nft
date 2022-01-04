@@ -9,19 +9,19 @@ const scripts = [
 
 let Controller
 
-class AfGridView extends React.Component {
+class AfActionsView extends React.Component {
   static get Controller() {
     if (Controller) return Controller
 
     try {
-      Controller = require('../controllers/AfGridController')
+      Controller = require('../controllers/AfActionsController')
       Controller = Controller.default || Controller
 
       return Controller
     }
     catch (e) {
       if (e.code == 'MODULE_NOT_FOUND') {
-        Controller = AfGridView
+        Controller = AfActionsView
 
         return Controller
       }
@@ -49,8 +49,12 @@ class AfGridView extends React.Component {
   }
 
   render() {
-    const proxies = AfGridView.Controller !== AfGridView ? transformProxies(this.props.children) : {
-
+    const proxies = AfActionsView.Controller !== AfActionsView ? transformProxies(this.props.children) : {
+      'af-metamask-connect-btn': [],
+      'af-metamask-connect-success': [],
+      'af-mint-btn': [],
+      'af-mint-success': [],
+      'af-refresh-btn': [],
     }
 
     return (
@@ -101,10 +105,39 @@ class AfGridView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="margin-top-40">
-            <div>[React grid goes in here - Do not remove this section]</div>
-            <div className="img-holder hide"><img src="images/background-tiles.png" loading="lazy" srcSet="images/background-tiles-p-500.png 500w, images/background-tiles.png 1501w" sizes="100vw" alt="A beautiful background made of tiles" className="img" /></div>
-            <div className="dropshadow-test" />
+          <div data-w-id="203a3fe2-dd47-8144-357c-8264319fc900" className="section wf-section">
+            <div className="container">
+              <h2 data-w-id="e1152758-d9c0-c7ba-339a-5ef2086dd60c" className="reveal">Let's mark your presence in the universe, <span className="alternative">with blockchain</span>.</h2>
+            </div>
+            <div className="container">
+              <div className="margin-top-40">
+                <div className="background-alice-blue hide">
+                  <div className="align-center">
+                    <h5>Coming soon, feel the FOMO 🔥</h5>
+                  </div>
+                </div>
+                <div className="align-center">
+                  {map(proxies['af-metamask-connect-btn'], props => <a href="#" {...{...props, className: `button w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Connect Metamask</React.Fragment>}</a>)}
+                  {map(proxies['af-metamask-connect-success'], props => <h5 {...props}>{props.children ? props.children : <React.Fragment>✅ Metamask connected</React.Fragment>}</h5>)}
+                </div>
+                <div className="margin-top-40">
+                  <div className="align-center">
+                    {map(proxies['af-mint-btn'], props => <a href="#" {...{...props, className: `button w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>MINT! 🚀</React.Fragment>}</a>)}
+                    {map(proxies['af-mint-success'], props => <h5 {...props}>{props.children ? props.children : <React.Fragment>✅ Minted</React.Fragment>}</h5>)}
+                  </div>
+                </div>
+                <div className="margin-top-40">
+                  <div className="align-center">
+                    {map(proxies['af-refresh-btn'], props => <a href="#" {...{...props, className: `button w-button ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>PLEASE REFRESH THE PAGE</React.Fragment>}</a>)}
+                  </div>
+                </div>
+                <div className="margin-top-40">
+                  <div className="align-center">
+                    <h2>⬇️</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </span>
       </span>
@@ -112,6 +145,6 @@ class AfGridView extends React.Component {
   }
 }
 
-export default AfGridView
+export default AfActionsView
 
 /* eslint-enable */
