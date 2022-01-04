@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
@@ -19,7 +19,7 @@ const network = new NetworkConnector({
     4: process.env.REACT_APP_RINKEBY_ALCHEMY_ENDPOINT!,
     31337: "http://127.0.0.1:8545",
   },
-  defaultChainId: 31337,
+  defaultChainId: process.env.NODE_ENV === "production" ? 4 : 31337,
 });
 
 const IndexController: FC = () => {
@@ -51,7 +51,7 @@ const IndexController: FC = () => {
 
       {/* mint view. due to limitations on appfairy, we can't isolate this in its own component.
       each element needs to be a direct children of IndexController */}
-      {/* actually, I'm lying. this could all be solved by adding a `af-el=af-mint` attribute, in a webflow, to a section around all these elements */}
+      {/* actually, I'm lying. this could all be solved by adding a `af-el=af-mint` attribute in a webflow section around all these elements */}
       {mint.mintable && <af-mint-btn onClick={mint.onMintClick} />}
       {mint.minted && <af-mint-success />}
       {mint.minted && <af-refresh-btn />}

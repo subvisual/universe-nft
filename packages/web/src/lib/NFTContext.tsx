@@ -18,6 +18,12 @@ interface NFTContext {
 
 import HardhatExports from "./abis.json";
 
+const Addresses: Record<number, string> = {
+  1: "TODO",
+  4: "0xB2F4d5417D79b640e02958B7Ca14dD020db17677",
+  31337: "0x26bb3a58dd048435b4A486478Cb4AA47A3ff1112",
+};
+
 const NFTContext = createContext<NFTContext>({ isOperator: false });
 
 export const NFTProvider: FC = ({ children }) => {
@@ -36,9 +42,9 @@ export const NFTProvider: FC = ({ children }) => {
   useEffect(() => {
     if (!library || !chainId) return;
 
-    const { address, abi } = HardhatExports.contracts.SubvisualUniverseNFT;
+    const { abi } = HardhatExports.contracts.SubvisualUniverseNFT;
 
-    const contract = new ethers.Contract(address, abi, library);
+    const contract = new ethers.Contract(Addresses[chainId], abi, library);
     setContract(contract);
   }, [signer, chainId, library]);
 
