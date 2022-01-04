@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import IndexController from "./controllers/IndexController";
+import IndexView from "./views/IndexView";
 
 import { NFTProvider } from "./lib/NFTContext";
 import { MintProvider } from "./lib/MintContext";
@@ -11,7 +11,7 @@ const App: FC = () => {
   return (
     <NFTProvider>
       <MintProvider>
-        <IndexController />
+        <IndexView />
       </MintProvider>
     </NFTProvider>
   );

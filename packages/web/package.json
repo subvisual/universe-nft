@@ -31,7 +31,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "yarn run build && netlify deploy"
+    "deploy:staging": "yarn run build && netlify deploy --dir ./build/",
+    "deploy:prod": "yarn run build && netlify deploy --dir ./build/ --prod"
   },
   "browserslist": {
     "production": [
