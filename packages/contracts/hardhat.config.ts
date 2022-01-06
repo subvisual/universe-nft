@@ -17,7 +17,7 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
   }
 });
 
-0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2
+0x6d41e0096f332af1fab2ba21936ce120de9244f2;
 
 const devMnemonic =
   "core tornado motion pigeon kiss dish differ asthma much ritual black foil";
@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 2000,
+        runs: 20,
       },
     },
   },

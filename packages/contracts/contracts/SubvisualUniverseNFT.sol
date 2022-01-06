@@ -1,26 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721} from "@rari-capital/solmate/src/tokens/ERC721.sol";
-import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
-import {IAccessControl, AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * An NFT representing the Subvisual Universe
  */
-contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
+contract SubvisualUniverseNFT is ERC721, Ownable, EIP712 {
     using Strings for uint16;
 
     //
     // Constants
     //
-
-    /// Role with permissions to set metadata and URIs
-    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR");
 
     // Mint approval EIP712 TypeHash
     bytes32 public constant MINT_TYPEHASH =
@@ -72,10 +67,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
         uint16 _width,
         uint16 _height,
         address _owner
-    ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
-        _setupRole(DEFAULT_ADMIN_ROLE, _owner);
-        _setupRole(OPERATOR_ROLE, _owner);
-
+    ) ERC721(_name, _symbol) Ownable() EIP712(_name, "1.0.0") {
         baseURI = _newBaseURI;
         URISuffix = _newURISuffix;
 
@@ -116,10 +108,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
      *
      * @param _newBaseURI new base URI for the token
      */
-    function setBaseURI(string memory _newBaseURI)
-        public
-        onlyRole(OPERATOR_ROLE)
-    {
+    function setBaseURI(string memory _newBaseURI) public onlyOwner {
         baseURI = _newBaseURI;
 
         emit BaseURIUpdated(_newBaseURI);
@@ -132,10 +121,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
      *
      * @param _newURISuffix new URI suffix for the token
      */
-    function setURISuffix(string memory _newURISuffix)
-        public
-        onlyRole(OPERATOR_ROLE)
-    {
+    function setURISuffix(string memory _newURISuffix) public onlyOwner {
         URISuffix = _newURISuffix;
 
         emit URISuffixUpdated(_newURISuffix);
@@ -196,10 +182,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
      * @param _to Address of the recipient
      * @param _tokenId token ID to mint
      */
-    function redeemFor(address _to, uint256 _tokenId)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
+    function redeemFor(address _to, uint256 _tokenId) external onlyOwner {
         _safeMint(_to, _tokenId);
     }
 
@@ -208,26 +191,6 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
     //
     function _baseURI() internal view returns (string memory) {
         return baseURI;
-    }
-
-    //
-    // ERC165
-    //
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        pure
-        virtual
-        override(ERC721, AccessControl)
-        returns (bool)
-    {
-        return
-            interfaceId == type(IERC721).interfaceId ||
-            interfaceId == type(IERC721Metadata).interfaceId ||
-            interfaceId == type(IAccessControl).interfaceId ||
-            interfaceId == 0x01ffc9a7 || // ERC165 Interface ID for ERC165
-            interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
-            interfaceId == 0x5b5e139f; // ERC165 Interface ID for ERC721Metadata
     }
 
     //
@@ -276,6 +239,6 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
         view
         returns (bool)
     {
-        return hasRole(OPERATOR_ROLE, ECDSA.recover(_digest, _sig));
+        return owner() == ECDSA.recover(_digest, _sig);
     }
 }

@@ -43,15 +43,7 @@ describe("SubvisualUniverseNFT", () => {
     it("cannot be set by a non-operator", async () => {
       const action = nft.connect(alice).setBaseURI("something else");
 
-      await expect(action).to.be.revertedWith(
-        `AccessControl: account ${alice.address.toLowerCase()} is missing role ${await nft.OPERATOR_ROLE()}`
-      );
-    });
-
-    it("can be set by an approved operator", async () => {
-      await nft.grantRole(await nft.OPERATOR_ROLE(), alice.address);
-
-      await nft.connect(alice).setBaseURI("something else");
+      await expect(action).to.be.revertedWith("");
     });
   });
 
@@ -176,24 +168,6 @@ describe("SubvisualUniverseNFT", () => {
     });
   });
 
-  describe("grantRole", () => {
-    it("admins can assign new operators", async () => {
-      await nft
-        .connect(owner)
-        .grantRole(await nft.OPERATOR_ROLE(), alice.address);
-    });
-
-    it("non-admins can't assign new operators", async () => {
-      const action = nft
-        .connect(alice)
-        .grantRole(await nft.OPERATOR_ROLE(), alice.address);
-
-      await expect(action).to.be.revertedWith(
-        `AccessControl: account ${alice.address.toLowerCase()} is missing role ${await nft.DEFAULT_ADMIN_ROLE()}`
-      );
-    });
-  });
-
   describe("supportsInterface", () => {
     it("behaves as an ERC165", async () => {
       expect(await behavesAsERC165(nft)).to.be.true;
@@ -204,10 +178,6 @@ describe("SubvisualUniverseNFT", () => {
 
     it("supports the IERC721Metadata interface", async () => {
       expect(await supportsInterface(nft, "IERC721Metadata")).to.be.true;
-    });
-
-    it("supports the IAccessControl interface", async () => {
-      expect(await supportsInterface(nft, "IAccessControl")).to.be.true;
     });
   });
 });
