@@ -26,6 +26,7 @@ const AfActionsController: FC = () => {
   const { activate, account } = useWeb3React<Web3Provider>();
   const { mintable, minted, onMintClick } = useMint();
 
+  console.log(account);
   const onConnectBtn = useCallback(
     (e: any) => {
       e.preventDefault();

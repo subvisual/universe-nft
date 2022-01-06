@@ -47,6 +47,7 @@ export const MintProvider: FC = ({ children }) => {
 
     if (!signer || !redeemCode) return;
 
+    console.log(redeemCode);
     const params = redeemCode.split("-");
     const x = params[0];
     const y = params[1];
@@ -58,7 +59,6 @@ export const MintProvider: FC = ({ children }) => {
 
   const onMintClick = useCallback(() => {
     (async function () {
-      console.log("here");
       if (!mintable || !contract || !signer || !params.sig) return;
 
       try {

@@ -28,7 +28,7 @@ async function main() {
 
   const nft = (await ethers.getContractAt(
     "SubvisualUniverseNFT",
-    "0x9EF8Fdf28805B4A32381D037b6579B5A752dA386",
+    "0x17ebBFF855a990Af86f655D832132B954FFf2cca",
     signer
   )) as SubvisualUniverseNFT;
 
