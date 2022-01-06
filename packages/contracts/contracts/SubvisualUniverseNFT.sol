@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import {IERC721, ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721} from "@rari-capital/solmate/src/tokens/ERC721.sol";
 import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IAccessControl, AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -205,7 +206,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
     //
     // ERC721
     //
-    function _baseURI() internal view override(ERC721) returns (string memory) {
+    function _baseURI() internal view returns (string memory) {
         return baseURI;
     }
 
@@ -215,7 +216,7 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
 
     function supportsInterface(bytes4 interfaceId)
         public
-        view
+        pure
         virtual
         override(ERC721, AccessControl)
         returns (bool)
@@ -224,7 +225,9 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
             interfaceId == type(IAccessControl).interfaceId ||
-            super.supportsInterface(interfaceId);
+            interfaceId == 0x01ffc9a7 || // ERC165 Interface ID for ERC165
+            interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
+            interfaceId == 0x5b5e139f; // ERC165 Interface ID for ERC721Metadata
     }
 
     //
@@ -233,10 +236,14 @@ contract SubvisualUniverseNFT is ERC721, AccessControl, EIP712 {
 
     function _getTokenData(uint256 _id) internal view returns (Data memory) {
         if (_exists(_id)) {
-            return Data(_id, ownerOf(_id), tokenURI(_id));
+            return Data(_id, ownerOf[_id], tokenURI(_id));
         } else {
             return Data(0, address(0), "");
         }
+    }
+
+    function _exists(uint256 _id) internal view returns (bool) {
+        return ownerOf[_id] != address(0);
     }
 
     /**
