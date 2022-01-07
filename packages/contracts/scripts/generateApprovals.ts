@@ -17,6 +17,11 @@ const fixture = (name: string, address: string, x: number, y: number) => [
   y,
 ];
 
+const addresses: Record<number, string> = {
+  1: "TODO",
+  31337: "0x6d5f81DB6e14220C0D118A7958bf6d669d085524",
+};
+
 const fixtures = [
   fixture("Alice", "0x6D41E0096f332Af1Fab2ba21936ce120dE9244f2", 103, 121),
   fixture("Bob", "0x0606Af40D316662aC2e7194E88806057F834D60b", 108, 118),
@@ -25,10 +30,12 @@ const fixtures = [
 
 async function main() {
   const [signer] = await ethers.getSigners();
+  const chainId = (await ethers.provider.getNetwork()).chainId;
+  console.log(chainId);
 
   const nft = (await ethers.getContractAt(
     "SubvisualUniverseNFT",
-    "0x17ebBFF855a990Af86f655D832132B954FFf2cca",
+    addresses[chainId] as string,
     signer
   )) as SubvisualUniverseNFT;
 
@@ -71,14 +78,15 @@ async function main() {
         : originalAddress;
 
     let redeemCode;
+
     if (address) {
       const id = await nft.coordsToId(x, y);
       const value = { account: address, tokenId: id };
       const sig = await signer._signTypedData(domain, types, value);
       redeemCode = `${x}-${y}-${sig}`;
-    }
 
-    console.log(`${name}, ${address}, ${redeemCode}`);
+      console.log(`${name}, ${address}, ${id.toString()}:\n${redeemCode}\n`);
+    }
   });
 
   await Promise.all(promises);

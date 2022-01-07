@@ -21,7 +21,7 @@ import HardhatExports from "./abis.json";
 const Addresses: Record<number, string> = {
   1: "TODO",
   4: "0xB2F4d5417D79b640e02958B7Ca14dD020db17677",
-  31337: "0x17ebBFF855a990Af86f655D832132B954FFf2cca",
+  31337: "0x6d5f81DB6e14220C0D118A7958bf6d669d085524",
 };
 
 const NFTContext = createContext<NFTContext>({ isOperator: false });
@@ -52,8 +52,8 @@ export const NFTProvider: FC = ({ children }) => {
   useEffect(() => {
     (async function () {
       if (!contract || !account) return;
-      const role = await contract.OPERATOR_ROLE();
-      setIsOperator(await contract.hasRole(role, account));
+      const owner = await contract.owner();
+      setIsOperator(owner == account);
     })();
   }, [contract, account]);
 

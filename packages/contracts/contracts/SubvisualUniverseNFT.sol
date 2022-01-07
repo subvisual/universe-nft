@@ -12,6 +12,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract SubvisualUniverseNFT is ERC721, Ownable, EIP712 {
     using Strings for uint16;
+    using ECDSA for bytes32;
 
     //
     // Constants
@@ -67,7 +68,9 @@ contract SubvisualUniverseNFT is ERC721, Ownable, EIP712 {
         uint16 _width,
         uint16 _height,
         address _owner
-    ) ERC721(_name, _symbol) Ownable() EIP712(_name, "1.0.0") {
+    ) ERC721(_name, _symbol) EIP712(_name, "1.0.0") {
+        _transferOwnership(_owner);
+
         baseURI = _newBaseURI;
         URISuffix = _newURISuffix;
 
@@ -158,7 +161,7 @@ contract SubvisualUniverseNFT is ERC721, Ownable, EIP712 {
     function redeem(uint256 _tokenId, bytes calldata _sig) external {
         require(inBoundaries(_tokenId), "not inside the grid");
 
-        require(_verify(_hash(_msgSender(), _tokenId), _sig));
+        require(_verify(_hash(_msgSender(), _tokenId), _sig), "invalid sig");
         _safeMint(_msgSender(), _tokenId);
     }
 
@@ -239,6 +242,14 @@ contract SubvisualUniverseNFT is ERC721, Ownable, EIP712 {
         view
         returns (bool)
     {
-        return owner() == ECDSA.recover(_digest, _sig);
+        return owner() == _digest.recover(_sig);
+    }
+
+    function recover(
+        address addr,
+        uint256 _tokenId,
+        bytes calldata _sig
+    ) external view returns (address) {
+        return ECDSA.recover(_hash(addr, _tokenId), _sig);
     }
 }

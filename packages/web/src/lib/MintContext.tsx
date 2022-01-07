@@ -47,12 +47,12 @@ export const MintProvider: FC = ({ children }) => {
 
     if (!signer || !redeemCode) return;
 
-    console.log(redeemCode);
     const params = redeemCode.split("-");
     const x = params[0];
     const y = params[1];
     const sig = params[2];
 
+    console.log({ x, y, sig });
     setParams({ x, y, sig });
     setMintable(true);
   }, [signer]);
@@ -66,6 +66,12 @@ export const MintProvider: FC = ({ children }) => {
           BigNumber.from(params.x),
           BigNumber.from(params.y)
         );
+        console.log(id.toString());
+        console.log(
+          "recovery: ",
+          await contract.recover(await signer.getAddress(), id, params.sig)
+        );
+        console.log(await contract.owner());
 
         await contract
           .connect(signer)
