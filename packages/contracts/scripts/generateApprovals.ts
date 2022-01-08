@@ -84,7 +84,9 @@ async function main() {
       const sig = await signer._signTypedData(domain, types, value);
       redeemCode = `${x}-${y}-${sig}`;
 
-      console.log(`${name}, ${address}, ${id.toString()}:\n${redeemCode}\n`);
+      console.log(
+        `${name}, ${address}, https://holidays.subvisual.com/?redeemCode=${redeemCode}`
+      );
     }
   });
 
