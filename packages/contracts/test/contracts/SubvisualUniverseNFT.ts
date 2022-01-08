@@ -181,19 +181,4 @@ describe("SubvisualUniverseNFT", () => {
       expect(await supportsInterface(nft, "IERC721Metadata")).to.be.true;
     });
   });
-
-  it.only("", async () => {
-    const c = SubvisualUniverseNFT__factory.connect(
-      "0x221899962C69FC9e6865a717f2B12A46E12572FA",
-      owner
-    );
-    const sig =
-      "0x736c54b2d560ab664d4f7085d09117d7048ba5ac17c1cf6d9311c2235fc4cbdb08c1d9f3679f7ad98f5ad524cfde2e6b971b3ce5410ba34c1b79893496b1b2811c";
-
-    const id = await nft.coordsToId(121, 103);
-    console.log(id.toString());
-    console.log(await owner.provider!.getNetwork());
-
-    console.log(await c.recover(owner.address, id, sig));
-  });
 });

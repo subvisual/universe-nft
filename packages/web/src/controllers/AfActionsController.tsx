@@ -16,10 +16,9 @@ const injected = new InjectedConnector({
 const network = new NetworkConnector({
   urls: {
     1: process.env.REACT_APP_MAINNET_ALCHEMY_ENDPOINT!,
-    4: process.env.REACT_APP_RINKEBY_ALCHEMY_ENDPOINT!,
     31337: "http://127.0.0.1:8545",
   },
-  defaultChainId: process.env.NODE_ENV === "production" ? 4 : 31337,
+  defaultChainId: process.env.NODE_ENV === "production" ? 1 : 31337,
 });
 
 const AfActionsController: FC = () => {

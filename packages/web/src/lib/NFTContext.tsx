@@ -19,8 +19,7 @@ interface NFTContext {
 import HardhatExports from "./abis.json";
 
 const Addresses: Record<number, string> = {
-  1: "TODO",
-  4: "0xB2F4d5417D79b640e02958B7Ca14dD020db17677",
+  1: "0x5738379364Fab26c7e044c02deD4ceef93333D84",
   31337: "0x6d5f81DB6e14220C0D118A7958bf6d669d085524",
 };
 
