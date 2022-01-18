@@ -75,7 +75,7 @@ export const MintProvider: FC = ({ children }) => {
 
         await contract
           .connect(signer)
-          .redeem(id, params.sig, { gasLimit: 5000000 });
+          .redeem(id, params.sig, { gasLimit: 90000 });
 
         setMintable(false);
         setMinted(true);
