@@ -20,7 +20,7 @@ import HardhatExports from "./abis.json";
 
 const Addresses: Record<number, string> = {
   1: "0x5738379364Fab26c7e044c02deD4ceef93333D84",
-  31337: "0x6d5f81DB6e14220C0D118A7958bf6d669d085524",
+  31337: "0x7a0006A426f9a4C3AC415D849d3bfcc04E15E8ae",
 };
 
 const NFTContext = createContext<NFTContext>({ isOperator: false });

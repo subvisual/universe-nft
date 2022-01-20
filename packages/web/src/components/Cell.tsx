@@ -1,5 +1,6 @@
 import type { FC } from "react";
 
+import axios from "axios";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export const Cell: FC<Props> = ({ x, y, size }) => {
   const [owner, setOwner] = useState<string | null>(null);
   const [ens, setEns] = useState<string | null>(null);
   const [own, setOwn] = useState<boolean>(false);
+  const [data, setData] = useState<Record<any, any>>({});
 
   const { contract } = useNFT();
 
@@ -35,12 +37,29 @@ export const Cell: FC<Props> = ({ x, y, size }) => {
 
       const data = await contract.tokenData(id);
 
-      if (data.owner != ethers.constants.AddressZero) {
-        setOwner(data.owner);
-        setUri(data.uri);
-      }
+      setData(data);
     })();
   }, [contract]);
+
+  useEffect(() => {
+    if (data.owner != ethers.constants.AddressZero) {
+      setOwner(data.owner);
+    }
+  }, [data.owner]);
+
+  useEffect(() => {
+    if (!data.uri) return;
+
+    if (data.uri.match(/\.json$/)) {
+      axios(data.uri).then(({ data }) => {
+        if (!data.images) return;
+
+        setUri(data.images["200x200"]);
+      });
+    } else {
+      setUri(uri);
+    }
+  }, [data.uri]);
 
   // update label
   useEffect(() => {
