@@ -32,7 +32,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:staging": "yarn run build && netlify deploy --dir ./build/",
-    "deploy:prod": "yarn run build && netlify deploy --dir ./build/ --prod"
+    "deploy:prod": "PUBLIC_URL=https://holidays.subvisual.com yarn run build && netlify deploy --dir ./build/ --prod"
   },
   "browserslist": {
     "production": [
