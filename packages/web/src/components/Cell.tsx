@@ -57,7 +57,7 @@ export const Cell: FC<Props> = ({ x, y, size }) => {
         setUri(data.images["200x200"]);
       });
     } else {
-      setUri(uri);
+      setUri(data.uri);
     }
   }, [data.uri]);
 
