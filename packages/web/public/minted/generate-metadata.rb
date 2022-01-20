@@ -13,6 +13,7 @@ Dir.glob("*.png").each do |f|
 
   File.open(mfile, "w") do |h|
     data = {
+      image: "https://holidays.subvisual.com/minted/#{coords}.png",
       images: {
         "200x200": "https://holidays.subvisual.com/minted/#{coords}.png"
       }
