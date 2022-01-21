@@ -1,6 +1,7 @@
 {
-  "image": "https://holidays.subvisual.com/minted/105x112.png",
+  "image": "https://holidays.subvisual.com/minted/1000x1000/105x112.png",
   "images": {
-    "200x200": "https://holidays.subvisual.com/minted/105x112.png"
+    "200x200": "https://holidays.subvisual.com/minted/200x200/105x112.png",
+    "1000x1000": "https://holidays.subvisual.com/minted/1000x1000/105x112.png"
   }
 }
